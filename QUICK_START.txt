@@ -1,0 +1,92 @@
+╔════════════════════════════════════════════════════════════════════════════╗
+║                    QUICK START - LOCAL DEVELOPMENT                         ║
+║                  Marketplace Platform (Next.js + Supabase)                  ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+📋 STEP 1: INSTALL DEPENDENCIES
+────────────────────────────────────────────────────────────────────────────
+  Command: pnpm install
+  Purpose: Install all required packages from package.json
+  Time: ~2-3 minutes
+
+
+🔐 STEP 2: CREATE SUPABASE ACCOUNT & PROJECT
+────────────────────────────────────────────────────────────────────────────
+  1. Go to: https://supabase.com
+  2. Sign up or log in
+  3. Create a new project
+  4. Wait for project to initialize (~1 minute)
+
+
+📝 STEP 3: GET YOUR ENVIRONMENT VARIABLES
+────────────────────────────────────────────────────────────────────────────
+  Location: Supabase Dashboard → Project Settings → API
+  
+  You need:
+  ✓ NEXT_PUBLIC_SUPABASE_URL      (your project URL)
+  ✓ NEXT_PUBLIC_SUPABASE_ANON_KEY (public key)
+  ✓ SUPABASE_SERVICE_ROLE_KEY     (server key)
+  
+  Also get JWT Secret from: Project Settings → Auth
+  ✓ SUPABASE_JWT_SECRET
+  
+  PostgreSQL credentials from: Project Settings → Database
+  ✓ POSTGRES_URL
+  ✓ POSTGRES_HOST
+  ✓ POSTGRES_USER
+  ✓ POSTGRES_PASSWORD
+  ✓ POSTGRES_DATABASE
+
+
+🔑 STEP 4: UPDATE .env.local FILE
+────────────────────────────────────────────────────────────────────────────
+  File location: C:\Users\Arjun\Downloads\code\.env.local
+  
+  Open the file and replace:
+  - "your_supabase_url_here" with your actual URL
+  - "your_supabase_anon_key_here" with your actual key
+  - "your_supabase_service_role_key_here" with your actual key
+  - "your_supabase_jwt_secret_here" with your actual secret
+  - PostgreSQL credentials with your actual values
+
+
+🗄️  STEP 5: INITIALIZE DATABASE
+────────────────────────────────────────────────────────────────────────────
+  1. Open Supabase Dashboard → SQL Editor
+  2. Click "New Query"
+  3. Copy & paste contents from: scripts/01_init_schema.sql
+  4. Click "Run"
+  5. Repeat steps 2-4 with: scripts/02_init_storage.sql
+
+
+🚀 STEP 6: START DEVELOPMENT SERVER
+────────────────────────────────────────────────────────────────────────────
+  Command: pnpm dev
+  
+  Output should show:
+  ✓ Local:        http://localhost:3000
+  ✓ Ready in: X ms
+
+
+🌐 STEP 7: OPEN IN BROWSER
+────────────────────────────────────────────────────────────────────────────
+  Navigate to: http://localhost:3000
+
+
+═══════════════════════════════════════════════════════════════════════════════
+
+OTHER USEFUL COMMANDS:
+  pnpm build    → Build for production
+  pnpm start    → Run production build
+  pnpm lint     → Run linter
+
+STOP THE SERVER:
+  Press Ctrl + C in the terminal
+
+DOCUMENTATION:
+  📖 Full setup guide: SETUP_GUIDE.md
+  📚 Next.js Docs: https://nextjs.org/docs
+  📚 Supabase Docs: https://supabase.com/docs
+
+═══════════════════════════════════════════════════════════════════════════════
+
