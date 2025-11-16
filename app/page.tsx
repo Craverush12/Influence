@@ -6,11 +6,10 @@ import { Sparkles, Users, Zap, Shield, TrendingUp, Rocket, ArrowRight, Palette, 
 export default function Home() {
   return (
     <div className="min-h-screen hero-gradient relative overflow-hidden">
-      {/* Animated Background Elements */}
+      {/* Minimal Background Elements */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-pink-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
-        <div className="absolute top-1/2 right-1/3 w-96 h-96 bg-cyan-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-white/3 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-white/2 rounded-full blur-3xl"></div>
       </div>
 
       {/* Navigation */}
@@ -33,8 +32,8 @@ export default function Home() {
       {/* Hero Section */}
       <section className="relative max-w-7xl mx-auto px-6 py-24 md:py-32 text-center fade-in">
         <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full mb-8 glass-card">
-          <Sparkles className="w-4 h-4 text-purple-400" />
-          <span className="text-sm font-medium">Join the creator revolution</span>
+          <Sparkles className="w-4 h-4 text-white/60" />
+          <span className="text-sm font-light">Join the creator revolution</span>
         </div>
 
         <h1 className="text-6xl md:text-8xl font-bold mb-6 leading-tight" style={{ fontFamily: 'var(--font-playfair, "Playfair Display", serif)' }}>
@@ -68,7 +67,7 @@ export default function Home() {
                 label: 'Creators Building', 
                 sublabel: 'Their dreams',
                 icon: Sparkles,
-                gradient: 'from-purple-500 to-pink-500',
+                gradient: 'from-white/20 to-white/10',
                 delay: '0.1s',
                 size: 'large'
               },
@@ -77,7 +76,7 @@ export default function Home() {
                 label: 'Connections Made', 
                 sublabel: 'Every month',
                 icon: Heart,
-                gradient: 'from-pink-500 to-red-500',
+                gradient: 'from-white/20 to-white/10',
                 delay: '0.2s',
                 size: 'medium'
               },
@@ -86,7 +85,7 @@ export default function Home() {
                 label: 'Value Created', 
                 sublabel: 'Together',
                 icon: TrendingUp,
-                gradient: 'from-cyan-500 to-blue-500',
+                gradient: 'from-white/20 to-white/10',
                 delay: '0.3s',
                 size: 'medium'
               },
@@ -162,7 +161,7 @@ export default function Home() {
                 title: 'Discover Your Perfect Match', 
                 desc: 'Browse through verified creators with stunning portfolios. Find collaborators who align with your vision and amplify your creative voice.',
                 highlight: '50K+ creators',
-                gradient: 'from-purple-500 via-pink-500 to-purple-500',
+                gradient: 'from-white/20 via-white/10 to-white/20',
                 position: 'left'
               },
               { 
@@ -170,7 +169,7 @@ export default function Home() {
                 title: 'Connect in Real-Time', 
                 desc: 'Instant messaging, video calls, and seamless collaboration tools. Work together like you\'re in the same room, even when you\'re worlds apart.',
                 highlight: 'Instant sync',
-                gradient: 'from-cyan-500 via-blue-500 to-cyan-500',
+                gradient: 'from-white/20 via-white/10 to-white/20',
                 position: 'right'
               },
               { 
@@ -178,7 +177,7 @@ export default function Home() {
                 title: 'Your Work, Protected', 
                 desc: 'Verified profiles, secure contracts, and transparent transactions. Focus on creating while we handle the trust and safety.',
                 highlight: '100% secure',
-                gradient: 'from-pink-500 via-red-500 to-pink-500',
+                gradient: 'from-white/20 via-white/10 to-white/20',
                 position: 'left'
               },
               { 
@@ -186,7 +185,7 @@ export default function Home() {
                 title: 'Grow Your Audience', 
                 desc: 'Connect with creators who bring new audiences. Cross-promote, collaborate, and watch your reach expand exponentially.',
                 highlight: '10x growth',
-                gradient: 'from-purple-500 via-pink-500 to-orange-500',
+                gradient: 'from-white/20 via-white/10 to-white/20',
                 position: 'right'
               },
               { 
@@ -194,7 +193,7 @@ export default function Home() {
                 title: 'Join the Movement', 
                 desc: 'Be part of a thriving community where creators support each other. Share knowledge, celebrate wins, and build lasting partnerships.',
                 highlight: '100K+ members',
-                gradient: 'from-pink-500 via-purple-500 to-cyan-500',
+                gradient: 'from-white/20 via-white/10 to-white/20',
                 position: 'left'
               },
               { 
@@ -202,7 +201,7 @@ export default function Home() {
                 title: 'Scale Without Limits', 
                 desc: 'Manage multiple projects, track collaborations, and scale your creative business. All the tools you need, beautifully integrated.',
                 highlight: 'Unlimited projects',
-                gradient: 'from-cyan-500 via-purple-500 to-pink-500',
+                gradient: 'from-white/20 via-white/10 to-white/20',
                 position: 'right'
               },
             ].map((feature, i) => {
@@ -280,13 +279,13 @@ export default function Home() {
             <div className="mb-12 stagger-item">
               <div className="glass-card p-10 md:p-16 relative overflow-hidden group hover:scale-[1.02] transition-all duration-500">
                 {/* Gradient background */}
-                <div className="absolute inset-0 bg-gradient-to-br from-purple-500/20 via-pink-500/20 to-cyan-500/20 opacity-50 group-hover:opacity-70 transition-opacity"></div>
+                <div className="absolute inset-0 bg-white/5 opacity-50 group-hover:opacity-70 transition-opacity"></div>
                 
                 <div className="relative z-10">
                   <div className="flex flex-col md:flex-row items-start md:items-center gap-6 mb-8">
                     {/* Avatar with gradient ring */}
                     <div className="relative">
-                      <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-gradient-to-br from-purple-500 via-pink-500 to-cyan-500 p-1">
+                      <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-white/10 border border-white/20 p-1">
                         <div className="w-full h-full rounded-full bg-black flex items-center justify-center text-2xl font-bold text-white">
                           SC
                         </div>
@@ -326,7 +325,7 @@ export default function Home() {
                   initials: 'MJ',
                   role: 'Video Producer',
                   followers: '500K',
-                  gradient: 'from-cyan-500 to-blue-500',
+                  gradient: 'from-white/20 to-white/10',
                   text: 'The best investment I\'ve made. Quality connections and seamless workflow make collaboration effortless.',
                   highlight: 'Seamless workflow',
                   icon: Zap
@@ -336,7 +335,7 @@ export default function Home() {
                   initials: 'ER',
                   role: 'Influencer & Brand Strategist',
                   followers: '1.2M',
-                  gradient: 'from-pink-500 to-purple-500',
+                  gradient: 'from-white/20 to-white/10',
                   text: 'Finally a platform that understands creators. Beautiful, intuitive, and powerful. It\'s become essential to my business.',
                   highlight: 'Essential tool',
                   icon: Rocket
@@ -386,7 +385,7 @@ export default function Home() {
             {/* Bottom CTA */}
             <div className="mt-12 text-center stagger-item" style={{ animationDelay: '0.6s' }}>
               <div className="inline-flex items-center gap-3 glass-card px-8 py-4">
-                <Heart className="w-5 h-5 text-pink-400" />
+                <Heart className="w-5 h-5 text-white/60" />
                 <span className="text-white/80 font-medium">Join thousands of creators building their dreams</span>
                 <ArrowRight className="w-5 h-5 text-white/60" />
               </div>

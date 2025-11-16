@@ -147,18 +147,18 @@ export default function MessagesPage() {
   const activeConversation = conversations.find((c) => c.id === selectedConversation)
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950 flex flex-col">
+    <div className="min-h-screen hero-gradient flex flex-col">
       {/* Navigation */}
-      <nav className="sticky top-0 z-50 bg-slate-950/80 backdrop-blur-xl border-b border-slate-800/50">
+      <nav className="sticky top-0 z-50 nav-glass">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <Link href="/" className="flex items-center gap-2">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center">
+              <div className="w-10 h-10 bg-white/10 border border-white/20 rounded-xl flex items-center justify-center">
                 <span className="text-white font-bold">CH</span>
               </div>
-              <span className="text-lg font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">Creator Hub</span>
+              <span className="text-lg font-bold gradient-text">Creator Hub</span>
             </Link>
-            <Link href="/dashboard" className="px-4 py-2 text-slate-300 hover:text-white transition-colors">
+            <Link href="/dashboard" className="px-4 py-2 text-white/70 hover:text-white transition-colors">
               Dashboard
             </Link>
           </div>
@@ -196,14 +196,14 @@ export default function MessagesPage() {
                     setSelectedConversation(conversation.id)
                     loadMessages(conversation.id)
                   }}
-                  className={`w-full text-left p-4 border-b border-slate-800 transition-colors ${
+                  className={`w-full text-left p-4 border-b border-white/10 transition-colors ${
                     selectedConversation === conversation.id
-                      ? 'bg-slate-800 border-l-2 border-l-cyan-500'
-                      : 'hover:bg-slate-800/50'
+                      ? 'bg-white/5 border-l-2 border-l-white/30'
+                      : 'hover:bg-white/5'
                   }`}
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 overflow-hidden">
+                    <div className="w-12 h-12 rounded-full bg-white/10 border border-white/20 overflow-hidden">
                       {conversation.profile_image_url && (
                         <img
                           src={conversation.profile_image_url || "/placeholder.svg"}
@@ -235,9 +235,9 @@ export default function MessagesPage() {
         {selectedConversation && activeConversation ? (
           <div className="flex-1 flex flex-col">
             {/* Chat Header */}
-            <div className="border-b border-slate-800 bg-slate-900/30 p-4 flex items-center justify-between">
+            <div className="border-b border-white/10 bg-white/5 p-4 flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 overflow-hidden">
+                <div className="w-10 h-10 rounded-full bg-white/10 border border-white/20 overflow-hidden">
                   {activeConversation.profile_image_url && (
                     <img
                       src={activeConversation.profile_image_url || "/placeholder.svg"}
@@ -263,13 +263,13 @@ export default function MessagesPage() {
                   <div
                     className={`max-w-xs lg:max-w-md px-4 py-3 rounded-lg ${
                       msg.sender_id === user.id
-                        ? 'bg-gradient-to-r from-blue-600 to-cyan-600 text-white'
-                        : 'bg-slate-800 text-slate-50'
+                        ? 'bg-white/10 text-white'
+                        : 'bg-white/5 text-white'
                     }`}
                   >
                     <p className="break-words">{msg.content}</p>
                     <p className={`text-xs mt-2 ${
-                      msg.sender_id === user.id ? 'text-blue-100' : 'text-slate-400'
+                      msg.sender_id === user.id ? 'text-white/60' : 'text-white/50'
                     }`}>
                       {new Date(msg.created_at).toLocaleTimeString()}
                     </p>
@@ -287,11 +287,11 @@ export default function MessagesPage() {
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                   placeholder="Type your message..."
-                  className="flex-1 px-4 py-3 rounded-lg bg-slate-800/50 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
+                  className="input-modern flex-1 px-4 py-3 rounded-lg text-white placeholder-white/40 focus:outline-none"
                 />
                 <button
                   type="submit"
-                  className="p-3 rounded-lg bg-gradient-to-r from-blue-600 to-cyan-600 text-white hover:from-blue-500 hover:to-cyan-500 transition-all"
+                  className="p-3 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-all"
                 >
                   <Send className="w-5 h-5" />
                 </button>

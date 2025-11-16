@@ -35,8 +35,8 @@ export default function LoginPage() {
     <div className="min-h-screen hero-gradient relative overflow-hidden flex items-center justify-center px-4 py-16">
       {/* Minimal Background */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-purple-500/5 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-pink-500/5 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-white/2 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-white/2 rounded-full blur-3xl"></div>
       </div>
 
       <div className="w-full max-w-md relative z-10">
@@ -72,7 +72,7 @@ export default function LoginPage() {
                   onFocus={() => setFocusedField('email')}
                   onBlur={() => setFocusedField(null)}
                   className={`input-modern w-full pl-4 transition-all duration-300 text-base font-light ${
-                    focusedField === 'email' ? 'ring-1 ring-purple-500/30 bg-white/5' : ''
+                    focusedField === 'email' ? 'ring-1 ring-white/20 bg-white/5' : ''
                   }`}
                   placeholder="your@email.com"
                   required
@@ -97,7 +97,7 @@ export default function LoginPage() {
                   onFocus={() => setFocusedField('password')}
                   onBlur={() => setFocusedField(null)}
                   className={`input-modern w-full pl-4 pr-12 transition-all duration-300 text-base font-light ${
-                    focusedField === 'password' ? 'ring-1 ring-purple-500/30 bg-white/5' : ''
+                    focusedField === 'password' ? 'ring-1 ring-white/20 bg-white/5' : ''
                   }`}
                   placeholder="Enter your password"
                   required

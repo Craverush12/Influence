@@ -64,15 +64,15 @@ export default function ExplorePage() {
     <div className="min-h-screen hero-gradient relative overflow-hidden">
       {/* Animated Background */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-pink-500/10 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-white/2 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-white/2 rounded-full blur-3xl"></div>
       </div>
 
       {/* Navigation */}
       <nav className="sticky top-0 z-50 nav-glass">
         <div className="max-w-7xl mx-auto px-6 py-5 flex justify-between items-center">
           <Link href="/" className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 via-pink-500 to-cyan-500 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center">
               <Sparkles className="w-5 h-5 text-white" />
             </div>
             <span className="text-xl font-bold gradient-text">Creator Hub</span>
@@ -111,8 +111,8 @@ export default function ExplorePage() {
         {loading ? (
           <div className="flex justify-center py-20">
             <div className="relative">
-              <div className="w-16 h-16 rounded-full border-4 border-purple-500/30 border-t-purple-500 animate-spin"></div>
-              <div className="absolute inset-0 w-16 h-16 rounded-full border-4 border-pink-500/30 border-t-pink-500 animate-spin" style={{ animationDelay: '0.15s' }}></div>
+              <div className="w-16 h-16 rounded-full border-4 border-white/20 border-t-white/60 animate-spin"></div>
+              <div className="absolute inset-0 w-16 h-16 rounded-full border-4 border-white/10 border-t-white/40 animate-spin" style={{ animationDelay: '0.15s' }}></div>
             </div>
           </div>
         ) : (
@@ -125,7 +125,7 @@ export default function ExplorePage() {
                 style={{ animationDelay: `${i * 0.1}s` }}
               >
                 {/* Cover Image with Gradient Overlay */}
-                <div className="w-full h-40 bg-gradient-to-br from-purple-500 via-pink-500 to-cyan-500 overflow-hidden relative">
+                <div className="w-full h-40 bg-white/5 overflow-hidden relative">
                   {creator.cover_image_url ? (
                     <img
                       src={creator.cover_image_url || "/placeholder.svg"}
@@ -133,7 +133,7 @@ export default function ExplorePage() {
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                     />
                   ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-purple-500 via-pink-500 to-cyan-500"></div>
+                    <div className="w-full h-full bg-white/5"></div>
                   )}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
                   
@@ -158,7 +158,7 @@ export default function ExplorePage() {
                   {/* Profile Avatar - Floating */}
                   <div className="absolute -top-12 left-6 z-10">
                     <div className="relative">
-                      <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-purple-500 via-pink-500 to-cyan-500 overflow-hidden border-4 border-black shadow-2xl group-hover:scale-110 transition-transform duration-300">
+                      <div className="w-20 h-20 rounded-2xl bg-white/10 border-4 border-black shadow-2xl group-hover:scale-110 transition-transform duration-300 overflow-hidden">
                         {creator.profile_image_url ? (
                           <img
                             src={creator.profile_image_url || "/placeholder.svg"}
@@ -166,7 +166,7 @@ export default function ExplorePage() {
                             className="w-full h-full object-cover"
                           />
                         ) : (
-                          <div className="w-full h-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-black text-2xl">
+                          <div className="w-full h-full bg-white/10 flex items-center justify-center text-white font-light text-2xl">
                             {(creator.display_name || creator.username)?.[0]?.toUpperCase()}
                           </div>
                         )}
@@ -180,7 +180,7 @@ export default function ExplorePage() {
                   <div className="pt-12">
                     {/* Name & Username */}
                     <div className="mb-4">
-                      <h3 className="text-xl font-black text-white mb-1 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-purple-400 group-hover:to-pink-400 transition-all">
+                      <h3 className="text-xl font-light text-white mb-1 transition-all">
                         {creator.display_name || creator.username}
                       </h3>
                       <p className="text-sm text-white/50 font-medium">@{creator.username}</p>
@@ -229,7 +229,7 @@ export default function ExplorePage() {
                   </div>
 
                   {/* Hover Glow Effect */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-purple-500/0 via-pink-500/0 to-cyan-500/0 group-hover:from-purple-500/10 group-hover:via-pink-500/10 group-hover:to-cyan-500/10 transition-all duration-500 rounded-2xl pointer-events-none"></div>
+                  <div className="absolute inset-0 bg-white/0 group-hover:bg-white/5 transition-all duration-500 rounded-2xl pointer-events-none"></div>
                 </div>
               </Link>
             ))}

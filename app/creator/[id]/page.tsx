@@ -71,8 +71,8 @@ export default function CreatorProfilePage() {
     return (
       <div className="min-h-screen hero-gradient flex items-center justify-center">
         <div className="relative">
-          <div className="w-16 h-16 rounded-full border-4 border-purple-500/30 border-t-purple-500 animate-spin"></div>
-          <div className="absolute inset-0 w-16 h-16 rounded-full border-4 border-pink-500/30 border-t-pink-500 animate-spin" style={{ animationDelay: '0.15s' }}></div>
+          <div className="w-16 h-16 rounded-full border-4 border-white/20 border-t-white/60 animate-spin"></div>
+          <div className="absolute inset-0 w-16 h-16 rounded-full border-4 border-white/10 border-t-white/40 animate-spin" style={{ animationDelay: '0.15s' }}></div>
         </div>
       </div>
     )
@@ -96,8 +96,8 @@ export default function CreatorProfilePage() {
     <div className="min-h-screen hero-gradient relative overflow-hidden">
       {/* Animated Background */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-pink-500/10 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-white/2 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-white/2 rounded-full blur-3xl"></div>
       </div>
 
       {/* Navigation */}
@@ -105,7 +105,7 @@ export default function CreatorProfilePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <Link href="/" className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 via-pink-500 to-cyan-500 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center">
                 <Sparkles className="w-5 h-5 text-white" />
               </div>
               <span className="text-lg md:text-xl font-bold gradient-text hidden sm:inline">Creator Hub</span>
@@ -138,7 +138,7 @@ export default function CreatorProfilePage() {
             <div className="flex flex-col sm:flex-row items-start sm:items-end gap-4 md:gap-6 mb-6 md:mb-0">
               {/* Profile Avatar */}
               <div className="relative -mt-16 md:-mt-20">
-                <div className="w-24 h-24 md:w-32 md:h-32 rounded-2xl bg-gradient-to-br from-purple-500 via-pink-500 to-cyan-500 overflow-hidden border-4 border-black shadow-xl">
+                <div className="w-24 h-24 md:w-32 md:h-32 rounded-2xl bg-white/10 border-4 border-black shadow-xl overflow-hidden">
                   {creator.profile_image_url ? (
                     <img
                       src={creator.profile_image_url || "/placeholder.svg"}
@@ -146,7 +146,7 @@ export default function CreatorProfilePage() {
                       className="w-full h-full object-cover"
                     />
                   ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold text-2xl md:text-3xl">
+                    <div className="w-full h-full bg-white/10 flex items-center justify-center text-white font-light text-2xl md:text-3xl">
                       {(creator.display_name || creator.username)?.[0]?.toUpperCase()}
                     </div>
                   )}
@@ -169,7 +169,7 @@ export default function CreatorProfilePage() {
                     <span className="text-white/50 text-sm">(128 reviews)</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Users className="w-4 h-4 text-purple-400" />
+                    <Users className="w-4 h-4 text-white/60" />
                     <span className="text-white/80 font-semibold">2.5K</span>
                     <span className="text-white/50 text-sm">followers</span>
                   </div>
@@ -218,7 +218,7 @@ export default function CreatorProfilePage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-8">
             {creator.location && (
               <div className="flex items-center gap-3 p-4 rounded-xl bg-white/5">
-                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-lg bg-white/10 border border-white/20 flex items-center justify-center">
                   <MapPin className="w-5 h-5 text-white" />
                 </div>
                 <div>
@@ -234,12 +234,12 @@ export default function CreatorProfilePage() {
                 rel="noopener noreferrer"
                 className="flex items-center gap-3 p-4 rounded-xl bg-white/5 hover:bg-white/10 transition-all group"
               >
-                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-500 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-lg bg-white/10 border border-white/20 flex items-center justify-center">
                   <Globe className="w-5 h-5 text-white" />
                 </div>
                 <div className="flex-1">
                   <p className="text-xs text-white/50 mb-1">Website</p>
-                  <p className="text-white font-semibold group-hover:text-cyan-400 transition-colors">Visit Site</p>
+                  <p className="text-white font-semibold group-hover:text-white/80 transition-colors">Visit Site</p>
                 </div>
                 <ExternalLink className="w-4 h-4 text-white/40 group-hover:text-white transition-colors" />
               </a>
@@ -265,12 +265,12 @@ export default function CreatorProfilePage() {
                   const Icon = getPlatformIcon(social.platform)
                   const getGradient = (platform: string) => {
                     switch(platform.toLowerCase()) {
-                      case 'instagram': return 'from-pink-500 via-purple-500 to-orange-500'
-                      case 'twitter': return 'from-blue-400 to-blue-600'
-                      case 'youtube': return 'from-red-600 to-red-700'
-                      case 'twitch': return 'from-purple-600 to-purple-800'
-                      case 'tiktok': return 'from-slate-900 via-pink-500 to-cyan-500'
-                      default: return 'from-purple-500 to-pink-500'
+                      case 'instagram': return 'from-white/20 to-white/10'
+                      case 'twitter': return 'from-white/20 to-white/10'
+                      case 'youtube': return 'from-white/20 to-white/10'
+                      case 'twitch': return 'from-white/20 to-white/10'
+                      case 'tiktok': return 'from-white/20 to-white/10'
+                      default: return 'from-white/20 to-white/10'
                     }
                   }
                   return (
@@ -324,8 +324,8 @@ export default function CreatorProfilePage() {
             <h2 className="text-2xl font-black text-white mb-6">Portfolio</h2>
             <div className="grid grid-cols-2 gap-3">
               {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="aspect-square rounded-xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 overflow-hidden group cursor-pointer">
-                  <div className="w-full h-full bg-gradient-to-br from-purple-500 via-pink-500 to-cyan-500 opacity-50 group-hover:opacity-70 transition-opacity"></div>
+                <div key={i} className="aspect-square rounded-xl bg-white/5 overflow-hidden group cursor-pointer">
+                  <div className="w-full h-full bg-white/5 group-hover:bg-white/10 transition-opacity"></div>
                 </div>
               ))}
             </div>
@@ -344,7 +344,7 @@ export default function CreatorProfilePage() {
                 { text: 'Received 5-star review', time: '1 week ago' },
               ].map((activity, i) => (
                 <div key={i} className="flex items-start gap-3 p-3 rounded-xl bg-white/5">
-                  <div className="w-2 h-2 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 mt-2"></div>
+                  <div className="w-2 h-2 rounded-full bg-white/40 mt-2"></div>
                   <div className="flex-1">
                     <p className="text-white/80 text-sm">{activity.text}</p>
                     <p className="text-white/40 text-xs mt-1">{activity.time}</p>

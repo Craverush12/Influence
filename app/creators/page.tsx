@@ -38,13 +38,13 @@ export default function CreatorDashboard() {
       icon: BriefcaseOpen,
       label: 'Active Jobs',
       value: '2',
-      color: 'bg-blue-100 text-blue-600',
+      color: 'bg-white/10 text-white',
     },
     {
       icon: Users,
       label: 'Total Applications',
       value: '11',
-      color: 'bg-purple-100 text-purple-600',
+      color: 'bg-white/10 text-white',
     },
     {
       icon: DollarSign,
@@ -153,7 +153,7 @@ export default function CreatorDashboard() {
                     <p className="font-medium text-foreground">Sarah Martinez applied to your job</p>
                     <p className="text-sm text-muted-foreground">YouTube Video Editing - Gaming Series</p>
                   </div>
-                  <span className="text-xs bg-blue-500/10 text-blue-400 px-3 py-1 rounded-full">2 hours ago</span>
+                  <span className="text-xs bg-white/10 text-white/70 px-3 py-1 rounded-full">2 hours ago</span>
                 </div>
                 <div className="flex items-center justify-between pb-4 border-b border-border">
                   <div>

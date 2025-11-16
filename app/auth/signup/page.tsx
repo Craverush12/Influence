@@ -71,8 +71,8 @@ export default function SignupPage() {
     <div className="min-h-screen hero-gradient relative overflow-hidden flex items-center justify-center px-4 py-16">
       {/* Minimal Background */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-purple-500/5 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-pink-500/5 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-white/2 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-white/2 rounded-full blur-3xl"></div>
       </div>
 
       <div className="w-full max-w-md relative z-10">
@@ -109,7 +109,7 @@ export default function SignupPage() {
                   onFocus={() => setFocusedField('displayName')}
                   onBlur={() => setFocusedField(null)}
                   className={`input-modern w-full pl-4 transition-all duration-300 text-base font-light ${
-                    focusedField === 'displayName' ? 'ring-1 ring-purple-500/30 bg-white/5' : ''
+                    focusedField === 'displayName' ? 'ring-1 ring-white/20 bg-white/5' : ''
                   }`}
                   placeholder="Enter your full name"
                   required
@@ -131,12 +131,12 @@ export default function SignupPage() {
                   onFocus={() => setFocusedField('username')}
                   onBlur={() => setFocusedField(null)}
                   className={`input-modern w-full pl-4 transition-all duration-300 text-base font-light ${
-                    focusedField === 'username' ? 'ring-1 ring-purple-500/30 bg-white/5' : ''
+                    focusedField === 'username' ? 'ring-1 ring-white/20 bg-white/5' : ''
                   }`}
                   placeholder="@yourhandle"
                   required
                 />
-                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-purple-400/60 font-light text-sm">@</span>
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40 font-light text-sm">@</span>
               </div>
               <p className="text-xs text-white/40 mt-1 font-light" style={{ letterSpacing: '0.02em' }}>
                 This will be your unique identifier on the platform
@@ -157,7 +157,7 @@ export default function SignupPage() {
                   onFocus={() => setFocusedField('email')}
                   onBlur={() => setFocusedField(null)}
                   className={`input-modern w-full pl-4 transition-all duration-300 text-base font-light ${
-                    focusedField === 'email' ? 'ring-1 ring-purple-500/30 bg-white/5' : ''
+                    focusedField === 'email' ? 'ring-1 ring-white/20 bg-white/5' : ''
                   }`}
                   placeholder="your@email.com"
                   required
@@ -182,7 +182,7 @@ export default function SignupPage() {
                   onFocus={() => setFocusedField('password')}
                   onBlur={() => setFocusedField(null)}
                   className={`input-modern w-full pl-4 pr-12 transition-all duration-300 text-base font-light ${
-                    focusedField === 'password' ? 'ring-1 ring-purple-500/30 bg-white/5' : ''
+                    focusedField === 'password' ? 'ring-1 ring-white/20 bg-white/5' : ''
                   }`}
                   placeholder="Create a strong password"
                   required
@@ -244,7 +244,7 @@ export default function SignupPage() {
                   onFocus={() => setFocusedField('confirmPassword')}
                   onBlur={() => setFocusedField(null)}
                   className={`input-modern w-full pl-4 pr-12 transition-all duration-300 text-base font-light ${
-                    focusedField === 'confirmPassword' ? 'ring-1 ring-purple-500/30 bg-white/5' : ''
+                    focusedField === 'confirmPassword' ? 'ring-1 ring-white/20 bg-white/5' : ''
                   } ${
                     formData.confirmPassword && formData.password !== formData.confirmPassword
                       ? 'ring-1 ring-red-500/30'

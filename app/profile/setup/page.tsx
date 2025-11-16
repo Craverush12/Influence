@@ -134,7 +134,7 @@ export default function ProfileSetupPage() {
       title: 'Basic Info', 
       subtitle: 'Let\'s start with the essentials',
       description: 'Your name and location help others find and connect with you. Share where you\'re based and how people can reach you.',
-      gradient: 'from-purple-500 to-pink-500' 
+      gradient: 'from-white/10 to-white/5' 
     },
     { 
       number: 2, 
@@ -142,7 +142,7 @@ export default function ProfileSetupPage() {
       title: 'Your Role', 
       subtitle: 'Define your creative identity',
       description: 'Whether you\'re a content creator looking for collaborators or a professional offering services, choose the path that aligns with your goals.',
-      gradient: 'from-pink-500 to-cyan-500' 
+      gradient: 'from-white/10 to-white/5' 
     },
     { 
       number: 3, 
@@ -150,7 +150,7 @@ export default function ProfileSetupPage() {
       title: 'Profile Photo', 
       subtitle: 'Show the world who you are',
       description: 'A great profile picture helps you stand out and builds trust with potential collaborators. Choose an image that represents your authentic self.',
-      gradient: 'from-cyan-500 to-purple-500' 
+      gradient: 'from-white/10 to-white/5' 
     },
     { 
       number: 4, 
@@ -158,7 +158,7 @@ export default function ProfileSetupPage() {
       title: 'About You', 
       subtitle: 'Share your unique story',
       description: 'Your bio is your chance to tell your story. Share your passions, your journey, and what makes you unique. This is how others will discover what you\'re all about.',
-      gradient: 'from-purple-500 via-pink-500 to-cyan-500' 
+      gradient: 'from-white/10 via-white/5 to-white/10' 
     },
   ]
 
@@ -168,8 +168,8 @@ export default function ProfileSetupPage() {
     <div className="min-h-screen hero-gradient relative overflow-hidden">
       {/* Minimal Background */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-purple-500/5 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-pink-500/5 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-white/2 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-white/2 rounded-full blur-3xl"></div>
       </div>
 
       <div className="max-w-4xl mx-auto px-4 py-12 relative z-10">
@@ -191,7 +191,7 @@ export default function ProfileSetupPage() {
           <div className="relative mb-12">
             <div className="h-0.5 bg-white/5 rounded-full overflow-hidden">
               <div 
-                className="h-full bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-500 rounded-full transition-all duration-500 ease-out"
+                className="h-full bg-gradient-to-r from-white/20 via-white/10 to-white/20 rounded-full transition-all duration-500 ease-out"
                 style={{ width: `${progress}%` }}
               />
             </div>
@@ -346,13 +346,13 @@ export default function ProfileSetupPage() {
                     }
                     className={`group relative p-6 rounded-2xl border transition-all duration-300 text-left overflow-hidden ${
                       profileData.userType === 'creator'
-                        ? 'border-purple-500/50 bg-purple-500/5'
+                        ? 'border-white/20 bg-white/5'
                         : 'border-white/5 hover:border-white/10 bg-white/2'
                     }`}
                   >
                     <div className="relative z-10">
                       <div className="flex items-start gap-4 mb-4">
-                        <div className={`w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center transition-transform ${
+                        <div className={`w-12 h-12 rounded-xl bg-white/10 border border-white/10 flex items-center justify-center transition-transform ${
                           profileData.userType === 'creator' ? 'scale-105' : ''
                         }`}>
                           <Sparkles className="w-6 h-6 text-white" />
@@ -366,7 +366,7 @@ export default function ProfileSetupPage() {
                           </p>
                         </div>
                         {profileData.userType === 'creator' && (
-                          <div className="w-5 h-5 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center flex-shrink-0">
+                          <div className="w-5 h-5 rounded-full bg-white/20 border border-white/30 flex items-center justify-center flex-shrink-0">
                             <Check className="w-3 h-3 text-white" />
                           </div>
                         )}
@@ -380,13 +380,13 @@ export default function ProfileSetupPage() {
                     }
                     className={`group relative p-6 rounded-2xl border transition-all duration-300 text-left overflow-hidden ${
                       profileData.userType === 'professional'
-                        ? 'border-cyan-500/50 bg-cyan-500/5'
+                        ? 'border-white/20 bg-white/5'
                         : 'border-white/5 hover:border-white/10 bg-white/2'
                     }`}
                   >
                     <div className="relative z-10">
                       <div className="flex items-start gap-4 mb-4">
-                        <div className={`w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-500 flex items-center justify-center transition-transform ${
+                        <div className={`w-12 h-12 rounded-xl bg-white/10 border border-white/10 flex items-center justify-center transition-transform ${
                           profileData.userType === 'professional' ? 'scale-105' : ''
                         }`}>
                           <Briefcase className="w-6 h-6 text-white" />
@@ -400,7 +400,7 @@ export default function ProfileSetupPage() {
                           </p>
                         </div>
                         {profileData.userType === 'professional' && (
-                          <div className="w-5 h-5 rounded-full bg-gradient-to-br from-cyan-500 to-blue-500 flex items-center justify-center flex-shrink-0">
+                          <div className="w-5 h-5 rounded-full bg-white/20 border border-white/30 flex items-center justify-center flex-shrink-0">
                             <Check className="w-3 h-3 text-white" />
                           </div>
                         )}
@@ -412,6 +412,7 @@ export default function ProfileSetupPage() {
             )}
 
             {/* Step 3: Profile Photo */}
+            {/* COMMENTED OUT - Image upload section disabled for now */}
             {step === 3 && (
               <div className="space-y-6 animate-slide-in">
                 <div className="mb-10">
@@ -419,19 +420,19 @@ export default function ProfileSetupPage() {
                     Profile Picture
                   </h2>
                   <p className="text-base text-white/60 leading-relaxed mb-2" style={{ letterSpacing: '0.03em', fontWeight: 300 }}>
-                    A great profile picture helps you stand out and builds trust with potential collaborators. Choose an image that represents your authentic self—something that shows who you are and what you're passionate about.
+                    Profile picture upload is temporarily disabled. You can add your profile picture later from your profile settings.
                   </p>
                   <p className="text-sm text-white/50 mt-2" style={{ letterSpacing: '0.02em', fontWeight: 300 }}>
-                    This will be the first thing people see when they visit your profile
+                    This step has been skipped for now
                   </p>
                 </div>
-                <div className="flex justify-center">
+                {/* <div className="flex justify-center">
                   <ImageUpload
                     onImageUpload={handleProfileImageUpload}
                     placeholder="Upload your profile picture"
                     aspectRatio="square"
                   />
-                </div>
+                </div> */}
               </div>
             )}
 

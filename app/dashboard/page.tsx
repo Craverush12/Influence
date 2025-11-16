@@ -32,8 +32,8 @@ export default function DashboardPage() {
     return (
       <div className="min-h-screen hero-gradient flex items-center justify-center">
         <div className="relative">
-          <div className="w-16 h-16 rounded-full border-4 border-purple-500/30 border-t-purple-500 animate-spin"></div>
-          <div className="absolute inset-0 w-16 h-16 rounded-full border-4 border-pink-500/30 border-t-pink-500 animate-spin" style={{ animationDelay: '0.15s' }}></div>
+          <div className="w-16 h-16 rounded-full border-4 border-white/20 border-t-white/60 animate-spin"></div>
+          <div className="absolute inset-0 w-16 h-16 rounded-full border-4 border-white/10 border-t-white/40 animate-spin" style={{ animationDelay: '0.15s' }}></div>
         </div>
       </div>
     )
@@ -43,15 +43,15 @@ export default function DashboardPage() {
     <div className="min-h-screen hero-gradient relative overflow-hidden">
       {/* Animated Background */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-pink-500/10 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-white/2 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-white/2 rounded-full blur-3xl"></div>
       </div>
 
       {/* Navigation */}
       <nav className="sticky top-0 z-50 nav-glass">
         <div className="max-w-7xl mx-auto px-6 py-5 flex justify-between items-center">
           <Link href="/" className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 via-pink-500 to-cyan-500 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center">
               <Sparkles className="w-5 h-5 text-white" />
             </div>
             <span className="text-xl font-bold gradient-text">Creator Hub</span>
@@ -102,7 +102,7 @@ export default function DashboardPage() {
               value: stats.connections, 
               label: 'Connections', 
               sublabel: 'Collaborators found',
-              gradient: 'from-purple-500 to-pink-500',
+              gradient: 'from-white/20 to-white/10',
               delay: '0.1s'
             },
             { 
@@ -110,7 +110,7 @@ export default function DashboardPage() {
               value: stats.messages, 
               label: 'Messages', 
               sublabel: 'Unread messages',
-              gradient: 'from-pink-500 to-cyan-500',
+              gradient: 'from-white/20 to-white/10',
               delay: '0.2s'
             },
             { 
@@ -118,7 +118,7 @@ export default function DashboardPage() {
               value: stats.rating, 
               label: 'Rating', 
               sublabel: 'Community score',
-              gradient: 'from-cyan-500 to-purple-500',
+              gradient: 'from-white/20 to-white/10',
               delay: '0.3s'
             },
           ].map((stat, i) => {
@@ -154,7 +154,7 @@ export default function DashboardPage() {
               icon: Search,
               title: 'Discover Creators',
               desc: 'Find talented collaborators and professionals',
-              gradient: 'from-purple-500 to-pink-500',
+              gradient: 'from-white/20 to-white/10',
               delay: '0.4s'
             },
             {
@@ -162,7 +162,7 @@ export default function DashboardPage() {
               icon: MessageSquare,
               title: 'Messages',
               desc: 'Chat with your collaborators',
-              gradient: 'from-pink-500 to-cyan-500',
+              gradient: 'from-white/20 to-white/10',
               delay: '0.5s'
             },
             {
@@ -170,7 +170,7 @@ export default function DashboardPage() {
               icon: Users,
               title: 'My Profile',
               desc: 'View and edit your creator profile',
-              gradient: 'from-cyan-500 to-purple-500',
+              gradient: 'from-white/20 to-white/10',
               delay: '0.6s'
             },
             {
@@ -178,7 +178,7 @@ export default function DashboardPage() {
               icon: Sparkles,
               title: 'Connect Socials',
               desc: 'Link your Instagram, TikTok, YouTube & more',
-              gradient: 'from-pink-500 via-purple-500 to-cyan-500',
+              gradient: 'from-white/20 via-white/10 to-white/20',
               delay: '0.7s'
             },
             {
@@ -186,7 +186,7 @@ export default function DashboardPage() {
               icon: Settings,
               title: 'Settings',
               desc: 'Manage your account preferences',
-              gradient: 'from-purple-500 via-pink-500 to-cyan-500',
+              gradient: 'from-white/20 via-white/10 to-white/20',
               delay: '0.7s'
             },
           ].map((action, i) => {
