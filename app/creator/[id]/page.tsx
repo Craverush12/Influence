@@ -53,18 +53,10 @@ export default function CreatorProfilePage() {
     setLoading(false)
   }
 
-  const handleMessageClick = async () => {
-    if (!currentUser) return
-
-    // Create message in database
-    const supabase = createClient()
-    await supabase.from('messages').insert({
-      sender_id: currentUser.id,
-      recipient_id: creator.id,
-      content: 'Hi! I found your profile on Creator Hub.',
-    })
-
-    router.push(`/messages`)
+  const handleMessageClick = () => {
+    if (!currentUser || !creator) return
+    // Navigate to messages with user parameter - the messages page will handle creating the conversation
+    router.push(`/messages?user=${creator.id}`)
   }
 
   if (loading) {

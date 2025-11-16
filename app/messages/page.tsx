@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
-import { Send, Plus, SearchIcon } from 'lucide-react'
+import { Send, SearchIcon } from 'lucide-react'
 import Link from 'next/link'
 
 interface Message {
@@ -34,7 +34,19 @@ export default function MessagesPage() {
   const [loading, setLoading] = useState(true)
   const [user, setUser] = useState<any>(null)
   const [searchTerm, setSearchTerm] = useState('')
+  const [error, setError] = useState<string | null>(null)
+  const [sending, setSending] = useState(false)
+  const [urlUserId, setUrlUserId] = useState<string | null>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
+
+  // Get URL params safely
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search)
+      const userIdParam = params.get('user')
+      setUrlUserId(userIdParam)
+    }
+  }, [])
 
   useEffect(() => {
     const storedUser = localStorage.getItem('user')
@@ -43,21 +55,45 @@ export default function MessagesPage() {
       return
     }
 
-    setUser(JSON.parse(storedUser))
-    loadConversations(JSON.parse(storedUser))
+    const userData = JSON.parse(storedUser)
+    setUser(userData)
+    loadConversations(userData)
   }, [router])
+  
+  // Handle URL user parameter after conversations load
+  useEffect(() => {
+    if (!user || !urlUserId || conversations.length === 0) return
+    if (user.id === urlUserId || selectedConversation === urlUserId) return
+    
+    handleStartConversation(urlUserId, user)
+  }, [conversations, user, urlUserId])
 
   const loadConversations = async (currentUser: any) => {
-    const supabase = createClient()
+    try {
+      setLoading(true)
+      setError(null)
+      const supabase = createClient()
 
-    // Get all messages involving the current user
-    const { data, error } = await supabase
-      .from('messages')
-      .select('*')
-      .or(`sender_id.eq.${currentUser.id},recipient_id.eq.${currentUser.id}`)
-      .order('created_at', { ascending: false })
+      // Get all messages involving the current user
+      const { data, error: messagesError } = await supabase
+        .from('messages')
+        .select('*')
+        .or(`sender_id.eq.${currentUser.id},recipient_id.eq.${currentUser.id}`)
+        .order('created_at', { ascending: false })
 
-    if (!error && data) {
+      if (messagesError) {
+        console.error('Error loading messages:', messagesError)
+        setError('Failed to load conversations')
+        setLoading(false)
+        return
+      }
+
+      if (!data || data.length === 0) {
+        setConversations([])
+        setLoading(false)
+        return
+      }
+
       // Extract unique conversation partners
       const partners = new Map<string, any>()
 
@@ -66,76 +102,204 @@ export default function MessagesPage() {
 
         if (!partners.has(partnerId)) {
           // Fetch partner details
-          const { data: partnerData } = await supabase
+          const { data: partnerData, error: partnerError } = await supabase
             .from('users')
             .select('*')
             .eq('id', partnerId)
             .single()
 
+          if (partnerError) {
+            console.error('Error loading partner:', partnerError)
+            continue
+          }
+
           if (partnerData) {
+            // Count unread messages from this partner
+            const unreadCount = data.filter(
+              (m) => m.recipient_id === currentUser.id && 
+                     m.sender_id === partnerId && 
+                     !m.read
+            ).length
+
+            // Get the most recent message
+            const recentMessages = data.filter(
+              (m) => (m.sender_id === partnerId && m.recipient_id === currentUser.id) ||
+                     (m.sender_id === currentUser.id && m.recipient_id === partnerId)
+            )
+            const lastMsg = recentMessages[0]
+
             partners.set(partnerId, {
               id: partnerId,
-              display_name: partnerData.display_name,
+              display_name: partnerData.display_name || partnerData.username,
               username: partnerData.username,
               profile_image_url: partnerData.profile_image_url,
-              lastMessage: msg.content,
-              lastMessageTime: msg.created_at,
-              unread: msg.read ? 0 : 1,
+              lastMessage: lastMsg?.content || '',
+              lastMessageTime: lastMsg?.created_at,
+              unread: unreadCount,
             })
           }
         }
       }
 
       setConversations(Array.from(partners.values()))
+    } catch (err) {
+      console.error('Error in loadConversations:', err)
+      setError('Failed to load conversations')
+    } finally {
+      setLoading(false)
     }
-
-    setLoading(false)
   }
 
   const loadMessages = async (recipientId: string) => {
-    const supabase = createClient()
+    if (!user || !user.id) {
+      setError('User not loaded')
+      return
+    }
 
-    const { data, error } = await supabase
-      .from('messages')
-      .select('*')
-      .or(
-        `and(sender_id.eq.${user.id},recipient_id.eq.${recipientId}),and(sender_id.eq.${recipientId},recipient_id.eq.${user.id})`
-      )
-      .order('created_at', { ascending: true })
+    try {
+      setError(null)
+      const supabase = createClient()
 
-    if (!error && data) {
-      setMessages(data)
-      scrollToBottom()
+      // Get messages between current user and recipient
+      const { data, error: messagesError } = await supabase
+        .from('messages')
+        .select('*')
+        .or(`and(sender_id.eq.${user.id},recipient_id.eq.${recipientId}),and(sender_id.eq.${recipientId},recipient_id.eq.${user.id})`)
+        .order('created_at', { ascending: true })
+
+      if (messagesError) {
+        console.error('Error loading messages:', messagesError)
+        setError('Failed to load messages')
+        return
+      }
+
+      if (data) {
+        setMessages(data)
+        scrollToBottom()
+
+        // Mark messages as read
+        const unreadIds = data
+          .filter((m) => m.recipient_id === user.id && !m.read)
+          .map((m) => m.id)
+
+        if (unreadIds.length > 0) {
+          await supabase
+            .from('messages')
+            .update({ read: true })
+            .in('id', unreadIds)
+        }
+      }
+    } catch (err) {
+      console.error('Error in loadMessages:', err)
+      setError('Failed to load messages')
     }
   }
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+    setTimeout(() => {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+    }, 100)
   }
 
   useEffect(() => {
     scrollToBottom()
   }, [messages])
 
+  const handleStartConversation = async (recipientId: string, currentUser: any) => {
+    try {
+      setError(null)
+      
+      // Check if conversation already exists
+      const existingConv = conversations.find((c) => c.id === recipientId)
+      
+      if (existingConv) {
+        setSelectedConversation(recipientId)
+        loadMessages(recipientId)
+        // Clear URL parameter
+        router.replace('/messages')
+        return
+      }
+
+      // Create initial message
+      const supabase = createClient()
+      const { data, error: insertError } = await supabase
+        .from('messages')
+        .insert({
+          sender_id: currentUser.id,
+          recipient_id: recipientId,
+          content: 'Hi! I found your profile on Creator Hub.',
+        })
+        .select()
+        .single()
+
+      if (insertError) {
+        console.error('Error creating message:', insertError)
+        setError('Failed to start conversation. Please try again.')
+        return
+      }
+
+      if (data) {
+        // Reload conversations to include the new one
+        await loadConversations(currentUser)
+        
+        // Small delay to ensure conversations state is updated
+        setTimeout(() => {
+          setSelectedConversation(recipientId)
+          loadMessages(recipientId)
+        }, 200)
+        
+        // Clear URL parameter
+        router.replace('/messages')
+      }
+    } catch (err) {
+      console.error('Error starting conversation:', err)
+      setError('Failed to start conversation. Please try again.')
+    }
+  }
+
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    if (!inputValue.trim() || !selectedConversation) return
+    if (!inputValue.trim() || !selectedConversation || !user || !user.id) {
+      return
+    }
 
-    const supabase = createClient()
+    if (sending) return
 
-    const { data, error } = await supabase
-      .from('messages')
-      .insert({
-        sender_id: user.id,
-        recipient_id: selectedConversation,
-        content: inputValue,
-      })
-      .select()
+    try {
+      setSending(true)
+      setError(null)
+      const supabase = createClient()
 
-    if (!error && data) {
-      setMessages([...messages, data[0]])
-      setInputValue('')
+      const { data, error: insertError } = await supabase
+        .from('messages')
+        .insert({
+          sender_id: user.id,
+          recipient_id: selectedConversation,
+          content: inputValue.trim(),
+        })
+        .select()
+        .single()
+
+      if (insertError) {
+        console.error('Error sending message:', insertError)
+        setError('Failed to send message. Please try again.')
+        return
+      }
+
+      if (data) {
+        setMessages([...messages, data])
+        setInputValue('')
+        scrollToBottom()
+
+        // Reload conversations to update last message
+        loadConversations(user)
+      }
+    } catch (err) {
+      console.error('Error in handleSendMessage:', err)
+      setError('Failed to send message. Please try again.')
+    } finally {
+      setSending(false)
     }
   }
 
@@ -167,17 +331,17 @@ export default function MessagesPage() {
 
       <div className="flex flex-1 overflow-hidden max-w-7xl mx-auto w-full">
         {/* Conversations Sidebar */}
-        <div className="w-80 border-r border-slate-800 bg-slate-900/30 flex flex-col">
+        <div className="w-80 border-r border-white/10 bg-white/5 flex flex-col">
           {/* Search */}
-          <div className="p-4 border-b border-slate-800">
+          <div className="p-4 border-b border-white/10">
             <div className="relative">
-              <SearchIcon className="absolute left-3 top-3 w-4 h-4 text-slate-500" />
+              <SearchIcon className="absolute left-3 top-3 w-4 h-4 text-white/40" />
               <input
                 type="text"
                 placeholder="Search conversations..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 rounded-lg bg-slate-800/50 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 text-sm"
+                className="input-modern w-full pl-10 pr-4 py-2 text-sm"
               />
             </div>
           </div>
@@ -186,7 +350,11 @@ export default function MessagesPage() {
           <div className="flex-1 overflow-y-auto">
             {loading ? (
               <div className="flex items-center justify-center h-32">
-                <div className="animate-spin rounded-full h-8 w-8 border-2 border-blue-500 border-t-transparent" />
+                <div className="animate-spin rounded-full h-8 w-8 border-2 border-white/20 border-t-white/60" />
+              </div>
+            ) : error ? (
+              <div className="flex items-center justify-center h-32 p-4">
+                <p className="text-white/60 text-sm text-center">{error}</p>
               </div>
             ) : filteredConversations.length > 0 ? (
               filteredConversations.map((conversation) => (
@@ -203,106 +371,143 @@ export default function MessagesPage() {
                   }`}
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-full bg-white/10 border border-white/20 overflow-hidden">
-                      {conversation.profile_image_url && (
+                    <div className="w-12 h-12 rounded-full bg-white/10 border border-white/20 overflow-hidden flex-shrink-0">
+                      {conversation.profile_image_url ? (
                         <img
                           src={conversation.profile_image_url || "/placeholder.svg"}
                           alt={conversation.display_name}
                           className="w-full h-full object-cover"
                         />
+                      ) : (
+                        <div className="w-full h-full bg-white/10 flex items-center justify-center text-white font-light text-lg">
+                          {(conversation.display_name || conversation.username)?.[0]?.toUpperCase()}
+                        </div>
                       )}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="font-semibold text-slate-50 truncate">
-                        {conversation.display_name}
-                      </p>
-                      <p className="text-sm text-slate-400 truncate">
-                        {conversation.lastMessage}
+                      <div className="flex items-center justify-between mb-1">
+                        <p className="font-light text-white truncate">
+                          {conversation.display_name || conversation.username}
+                        </p>
+                        {conversation.unread && conversation.unread > 0 && (
+                          <span className="ml-2 flex-shrink-0 w-5 h-5 rounded-full bg-white/20 text-white text-xs flex items-center justify-center">
+                            {conversation.unread}
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-sm text-white/50 truncate">
+                        {conversation.lastMessage || 'No messages yet'}
                       </p>
                     </div>
                   </div>
                 </button>
               ))
             ) : (
-              <div className="flex items-center justify-center h-32 text-slate-500">
-                <p>No conversations yet</p>
+              <div className="flex items-center justify-center h-32 text-white/50 p-4">
+                <div className="text-center">
+                  <p className="text-sm mb-2">No conversations yet</p>
+                  <p className="text-xs text-white/40">Start a conversation from a creator's profile</p>
+                </div>
               </div>
             )}
           </div>
         </div>
 
         {/* Chat Area */}
-        {selectedConversation && activeConversation ? (
+        {selectedConversation && activeConversation && user ? (
           <div className="flex-1 flex flex-col">
             {/* Chat Header */}
             <div className="border-b border-white/10 bg-white/5 p-4 flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-white/10 border border-white/20 overflow-hidden">
-                  {activeConversation.profile_image_url && (
+                <div className="w-10 h-10 rounded-full bg-white/10 border border-white/20 overflow-hidden flex-shrink-0">
+                  {activeConversation.profile_image_url ? (
                     <img
                       src={activeConversation.profile_image_url || "/placeholder.svg"}
                       alt={activeConversation.display_name}
                       className="w-full h-full object-cover"
                     />
+                  ) : (
+                    <div className="w-full h-full bg-white/10 flex items-center justify-center text-white font-light">
+                      {(activeConversation.display_name || activeConversation.username)?.[0]?.toUpperCase()}
+                    </div>
                   )}
                 </div>
                 <div>
-                  <p className="font-semibold text-slate-50">{activeConversation.display_name}</p>
-                  <p className="text-xs text-slate-400">@{activeConversation.username}</p>
+                  <p className="font-light text-white">{activeConversation.display_name || activeConversation.username}</p>
+                  <p className="text-xs text-white/50">@{activeConversation.username}</p>
                 </div>
               </div>
             </div>
 
             {/* Messages */}
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
-              {messages.map((msg) => (
-                <div
-                  key={msg.id}
-                  className={`flex ${msg.sender_id === user.id ? 'justify-end' : 'justify-start'}`}
-                >
-                  <div
-                    className={`max-w-xs lg:max-w-md px-4 py-3 rounded-lg ${
-                      msg.sender_id === user.id
-                        ? 'bg-white/10 text-white'
-                        : 'bg-white/5 text-white'
-                    }`}
-                  >
-                    <p className="break-words">{msg.content}</p>
-                    <p className={`text-xs mt-2 ${
-                      msg.sender_id === user.id ? 'text-white/60' : 'text-white/50'
-                    }`}>
-                      {new Date(msg.created_at).toLocaleTimeString()}
-                    </p>
-                  </div>
+              {messages.length === 0 ? (
+                <div className="flex items-center justify-center h-full">
+                  <p className="text-white/50 text-sm">No messages yet. Start the conversation!</p>
                 </div>
-              ))}
+              ) : (
+                messages.map((msg) => (
+                  <div
+                    key={msg.id}
+                    className={`flex ${msg.sender_id === user.id ? 'justify-end' : 'justify-start'}`}
+                  >
+                    <div
+                      className={`max-w-xs lg:max-w-md px-4 py-3 rounded-lg ${
+                        msg.sender_id === user.id
+                          ? 'bg-white/10 text-white'
+                          : 'bg-white/5 text-white'
+                      }`}
+                    >
+                      <p className="break-words font-light">{msg.content}</p>
+                      <p className={`text-xs mt-2 font-light ${
+                        msg.sender_id === user.id ? 'text-white/60' : 'text-white/50'
+                      }`}>
+                        {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      </p>
+                    </div>
+                  </div>
+                ))
+              )}
               <div ref={messagesEndRef} />
             </div>
 
+            {/* Error Message */}
+            {error && (
+              <div className="px-4 py-2 bg-red-500/10 border-t border-red-500/20">
+                <p className="text-red-400/80 text-sm">{error}</p>
+              </div>
+            )}
+
             {/* Input */}
-            <div className="border-t border-slate-800 bg-slate-900/30 p-4">
+            <div className="border-t border-white/10 bg-white/5 p-4">
               <form onSubmit={handleSendMessage} className="flex gap-2">
                 <input
                   type="text"
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                   placeholder="Type your message..."
-                  className="input-modern flex-1 px-4 py-3 rounded-lg text-white placeholder-white/40 focus:outline-none"
+                  className="input-modern flex-1 px-4 py-3 rounded-lg"
+                  disabled={sending}
                 />
                 <button
                   type="submit"
-                  className="p-3 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-all"
+                  disabled={sending || !inputValue.trim()}
+                  className="p-3 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <Send className="w-5 h-5" />
+                  {sending ? (
+                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                  ) : (
+                    <Send className="w-5 h-5" />
+                  )}
                 </button>
               </form>
             </div>
           </div>
         ) : (
-          <div className="flex-1 flex items-center justify-center text-slate-400">
+          <div className="flex-1 flex items-center justify-center text-white/50">
             <div className="text-center">
-              <p className="text-lg mb-4">Select a conversation to start messaging</p>
-              <p className="text-sm">or browse creators to start a new chat</p>
+              <p className="text-lg mb-4 font-light">Select a conversation to start messaging</p>
+              <p className="text-sm text-white/40 font-light">or browse creators to start a new chat</p>
             </div>
           </div>
         )}
