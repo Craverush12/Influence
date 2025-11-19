@@ -1,42 +1,47 @@
-'use client'
-
-import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { createClient } from '@/lib/supabase/client'
-import { Settings, Search, Users, MessageSquare, Star, LogOut, TrendingUp, Sparkles, ArrowRight } from 'lucide-react'
+import { redirect } from 'next/navigation'
+import { createClient } from '@/lib/supabase/server'
+import { getCurrentUser } from '@/lib/auth-service'
 import Link from 'next/link'
+import {
+  LayoutDashboard,
+  Users,
+  MessageSquare,
+  Briefcase,
+  Settings,
+  LogOut,
+  Bell,
+  Search,
+  TrendingUp,
+  Star,
+  Zap,
+  Sparkles,
+  ArrowRight
+} from 'lucide-react'
+import { logout } from '@/app/actions/auth'
+import KarmaBalance from '@/components/karma-balance'
 
-export default function DashboardPage() {
-  const router = useRouter()
-  const [user, setUser] = useState<any>(null)
-  const [stats, setStats] = useState({ connections: 0, messages: 0, rating: 4.8 })
-  const [loading, setLoading] = useState(true)
+export default async function DashboardPage() {
+  const user = await getCurrentUser()
 
-  useEffect(() => {
-    const storedUser = localStorage.getItem('user')
-    if (!storedUser) {
-      router.push('/auth/login')
-      return
-    }
-
-    setUser(JSON.parse(storedUser))
-    setLoading(false)
-  }, [router])
-
-  const handleLogout = () => {
-    localStorage.removeItem('user')
-    router.push('/auth/login')
+  if (!user) {
+    redirect('/auth/login')
   }
 
-  if (loading) {
-    return (
-      <div className="min-h-screen hero-gradient flex items-center justify-center">
-        <div className="relative">
-          <div className="w-16 h-16 rounded-full border-4 border-white/20 border-t-white/60 animate-spin"></div>
-          <div className="absolute inset-0 w-16 h-16 rounded-full border-4 border-white/10 border-t-white/40 animate-spin" style={{ animationDelay: '0.15s' }}></div>
-        </div>
-      </div>
-    )
+  const supabase = await createClient()
+
+  // Fetch user profile details including role
+  const { data: userProfile } = await supabase
+    .from('users')
+    .select('*, user_roles(role)')
+    .eq('id', user.id)
+    .single()
+
+  const userRole = userProfile?.user_roles?.[0]?.role || 'creator'
+
+  const stats = {
+    connections: 125,
+    messages: 3,
+    rating: 4.9
   }
 
   return (
@@ -58,6 +63,10 @@ export default function DashboardPage() {
           </Link>
 
           <div className="flex items-center gap-4">
+            <KarmaBalance />
+            <Link href="/profile/setup" className="btn-secondary text-sm">
+              Edit Profile
+            </Link>
             <Link
               href="/explore"
               className="flex items-center gap-2 px-4 py-2 text-white/70 hover:text-white transition-colors rounded-lg hover:bg-white/5"
@@ -72,13 +81,15 @@ export default function DashboardPage() {
               <MessageSquare className="w-5 h-5" />
               <span className="hidden md:inline">Messages</span>
             </Link>
-            <button
-              onClick={handleLogout}
-              className="flex items-center gap-2 px-4 py-2 text-white/70 hover:text-red-400 transition-colors rounded-lg hover:bg-white/5"
-            >
-              <LogOut className="w-5 h-5" />
-              <span className="hidden md:inline">Logout</span>
-            </button>
+            <form action={logout}>
+              <button
+                type="submit"
+                className="flex items-center gap-2 px-4 py-2 text-white/70 hover:text-red-400 transition-colors rounded-lg hover:bg-white/5"
+              >
+                <LogOut className="w-5 h-5" />
+                <span className="hidden md:inline">Logout</span>
+              </button>
+            </form>
           </div>
         </div>
       </nav>
@@ -89,7 +100,7 @@ export default function DashboardPage() {
         <div className="mb-12 fade-in">
           <h1 className="text-4xl md:text-6xl font-black mb-3">
             <span className="text-white">Welcome back,</span>{' '}
-            <span className="gradient-text">{user?.display_name || user?.username}</span>
+            <span className="gradient-text">{userProfile?.display_name || user.email}</span>
           </h1>
           <p className="text-xl text-white/60">Ready to create something amazing today?</p>
         </div>
@@ -97,26 +108,26 @@ export default function DashboardPage() {
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
           {[
-            { 
-              icon: Users, 
-              value: stats.connections, 
-              label: 'Connections', 
+            {
+              icon: Users,
+              value: stats.connections,
+              label: 'Connections',
               sublabel: 'Collaborators found',
               gradient: 'from-white/20 to-white/10',
               delay: '0.1s'
             },
-            { 
-              icon: MessageSquare, 
-              value: stats.messages, 
-              label: 'Messages', 
+            {
+              icon: MessageSquare,
+              value: stats.messages,
+              label: 'Messages',
               sublabel: 'Unread messages',
               gradient: 'from-white/20 to-white/10',
               delay: '0.2s'
             },
-            { 
-              icon: Star, 
-              value: stats.rating, 
-              label: 'Rating', 
+            {
+              icon: Star,
+              value: stats.rating,
+              label: 'Rating',
               sublabel: 'Community score',
               gradient: 'from-white/20 to-white/10',
               delay: '0.3s'
@@ -124,7 +135,7 @@ export default function DashboardPage() {
           ].map((stat, i) => {
             const Icon = stat.icon
             return (
-              <div 
+              <div
                 key={i}
                 className="glass-card p-6 stagger-item group hover:scale-105 transition-all duration-300"
                 style={{ animationDelay: stat.delay }}

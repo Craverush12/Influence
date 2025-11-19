@@ -1,16 +1,20 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useActionState } from 'react'
 import { useRouter } from 'next/navigation'
 import ImageUpload from '@/components/image-upload'
 import { uploadImage } from '@/lib/supabase/storage'
-import { createClient } from '@/lib/supabase/client'
+import { updateProfile } from '@/app/actions/profile'
 import { ArrowRight, ArrowLeft, Sparkles, User, Briefcase, Image as ImageIcon, FileText, Check, MapPin, Globe, Camera } from 'lucide-react'
+
+const initialState = {
+  error: '',
+}
 
 export default function ProfileSetupPage() {
   const router = useRouter()
+  const [state, action, isPending] = useActionState(updateProfile, initialState)
   const [step, setStep] = useState(1)
-  const [loading, setLoading] = useState(false)
   const [profileData, setProfileData] = useState({
     displayName: '',
     bio: '',
@@ -28,15 +32,6 @@ export default function ProfileSetupPage() {
     try {
       const url = await uploadImage(file, 'profile-images')
       setProfileData({ ...profileData, profileImage: url })
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Image upload failed')
-    }
-  }
-
-  const handleCoverImageUpload = async (file: File) => {
-    try {
-      const url = await uploadImage(file, 'cover-images')
-      setProfileData({ ...profileData, coverImage: url })
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Image upload failed')
     }
@@ -62,103 +57,38 @@ export default function ProfileSetupPage() {
     setStep(step - 1)
   }
 
-  const handleSubmit = async () => {
-    if (!profileData.bio) {
-      setError('Please add a bio')
-      return
-    }
-
-    setLoading(true)
-    setError('')
-
-    try {
-      const userStr = localStorage.getItem('user')
-      if (!userStr) {
-        throw new Error('User session not found. Please sign up again.')
-      }
-      
-      const user = JSON.parse(userStr)
-      if (!user.id) {
-        throw new Error('Invalid user session. Please sign up again.')
-      }
-
-      const supabase = createClient()
-
-      const { error: updateError } = await supabase
-        .from('users')
-        .update({
-          display_name: profileData.displayName,
-          bio: profileData.bio,
-          location: profileData.location,
-          website: profileData.website,
-          profile_image_url: profileData.profileImage,
-          cover_image_url: profileData.coverImage,
-          updated_at: new Date().toISOString(),
-        })
-        .eq('id', user.id)
-
-      if (updateError) {
-        console.log('[v0] Update error:', updateError)
-        throw new Error(updateError.message || 'Failed to update profile')
-      }
-
-      if (profileData.userType) {
-        const { error: roleError } = await supabase
-          .from('user_roles')
-          .insert({
-            user_id: user.id,
-            role: profileData.userType,
-          })
-        
-        if (roleError) {
-          console.log('[v0] Role error:', roleError)
-          throw new Error(roleError.message || 'Failed to set user role')
-        }
-      }
-
-      console.log('[v0] Profile saved successfully')
-      router.push('/dashboard')
-    } catch (err) {
-      const errorMsg = err instanceof Error ? err.message : 'Failed to save profile'
-      console.log('[v0] Submit error:', errorMsg)
-      setError(errorMsg)
-    } finally {
-      setLoading(false)
-    }
-  }
-
   const steps = [
-    { 
-      number: 1, 
-      icon: User, 
-      title: 'Basic Info', 
+    {
+      number: 1,
+      icon: User,
+      title: 'Basic Info',
       subtitle: 'Let\'s start with the essentials',
       description: 'Your name and location help others find and connect with you. Share where you\'re based and how people can reach you.',
-      gradient: 'from-white/10 to-white/5' 
+      gradient: 'from-white/10 to-white/5'
     },
-    { 
-      number: 2, 
-      icon: Briefcase, 
-      title: 'Your Role', 
+    {
+      number: 2,
+      icon: Briefcase,
+      title: 'Your Role',
       subtitle: 'Define your creative identity',
       description: 'Whether you\'re a content creator looking for collaborators or a professional offering services, choose the path that aligns with your goals.',
-      gradient: 'from-white/10 to-white/5' 
+      gradient: 'from-white/10 to-white/5'
     },
-    { 
-      number: 3, 
-      icon: ImageIcon, 
-      title: 'Profile Photo', 
+    {
+      number: 3,
+      icon: ImageIcon,
+      title: 'Profile Photo',
       subtitle: 'Show the world who you are',
       description: 'A great profile picture helps you stand out and builds trust with potential collaborators. Choose an image that represents your authentic self.',
-      gradient: 'from-white/10 to-white/5' 
+      gradient: 'from-white/10 to-white/5'
     },
-    { 
-      number: 4, 
-      icon: FileText, 
-      title: 'About You', 
+    {
+      number: 4,
+      icon: FileText,
+      title: 'About You',
       subtitle: 'Share your unique story',
       description: 'Your bio is your chance to tell your story. Share your passions, your journey, and what makes you unique. This is how others will discover what you\'re all about.',
-      gradient: 'from-white/10 via-white/5 to-white/10' 
+      gradient: 'from-white/10 via-white/5 to-white/10'
     },
   ]
 
@@ -186,11 +116,11 @@ export default function ProfileSetupPage() {
               Step {step} of {steps.length} • {Math.round((step / steps.length) * 100)}% complete
             </p>
           </div>
-          
+
           {/* Minimal Progress Bar */}
           <div className="relative mb-12">
             <div className="h-0.5 bg-white/5 rounded-full overflow-hidden">
-              <div 
+              <div
                 className="h-full bg-gradient-to-r from-white/20 via-white/10 to-white/20 rounded-full transition-all duration-500 ease-out"
                 style={{ width: `${progress}%` }}
               />
@@ -204,42 +134,38 @@ export default function ProfileSetupPage() {
               const isActive = step === s.number
               const isCompleted = step > s.number
               const isUpcoming = step < s.number
-              
+
               return (
                 <div key={s.number} className="flex items-center flex-1">
                   <div className="flex flex-col items-center flex-1 relative">
                     {/* Step Circle */}
-                    <div className={`relative w-10 h-10 rounded-xl flex items-center justify-center mb-2 transition-all duration-500 ${
-                      isActive 
-                        ? `bg-gradient-to-br ${s.gradient} scale-105` 
-                        : isCompleted 
-                        ? 'bg-green-500/20 scale-100' 
-                        : 'bg-white/5 scale-100'
-                    }`}>
+                    <div className={`relative w-10 h-10 rounded-xl flex items-center justify-center mb-2 transition-all duration-500 ${isActive
+                        ? `bg-gradient-to-br ${s.gradient} scale-105`
+                        : isCompleted
+                          ? 'bg-green-500/20 scale-100'
+                          : 'bg-white/5 scale-100'
+                      }`}>
                       {isCompleted ? (
                         <Check className="w-5 h-5 text-green-400" />
                       ) : (
-                        <StepIcon className={`w-5 h-5 transition-colors ${
-                          isActive ? 'text-white' : 'text-white/30'
-                        }`} />
+                        <StepIcon className={`w-5 h-5 transition-colors ${isActive ? 'text-white' : 'text-white/30'
+                          }`} />
                       )}
                     </div>
-                    
+
                     {/* Step Title */}
                     <div className="text-center">
-                      <div className={`text-xs font-light mb-0.5 transition-colors uppercase tracking-wider ${
-                        isActive ? 'text-white' : isCompleted ? 'text-green-400/70' : 'text-white/30'
-                      }`}>
+                      <div className={`text-xs font-light mb-0.5 transition-colors uppercase tracking-wider ${isActive ? 'text-white' : isCompleted ? 'text-green-400/70' : 'text-white/30'
+                        }`}>
                         {s.title}
                       </div>
                     </div>
                   </div>
-                  
+
                   {/* Connector Line */}
                   {i < steps.length - 1 && (
-                    <div className={`h-0.5 flex-1 mx-3 mb-6 rounded-full transition-all duration-500 ${
-                      isCompleted ? 'bg-green-500/30' : 'bg-white/5'
-                    }`}></div>
+                    <div className={`h-0.5 flex-1 mx-3 mb-6 rounded-full transition-all duration-500 ${isCompleted ? 'bg-green-500/30' : 'bg-white/5'
+                      }`}></div>
                   )}
                 </div>
               )
@@ -251,8 +177,17 @@ export default function ProfileSetupPage() {
         <div className="glass-card p-8 md:p-12 fade-in relative overflow-hidden">
           {/* Background Gradient for Current Step */}
           <div className={`absolute inset-0 bg-gradient-to-br ${steps[step - 1].gradient} opacity-5 pointer-events-none transition-opacity duration-500`}></div>
-          
-          <div className="relative z-10">
+
+          <form action={action} className="relative z-10">
+            {/* Hidden Inputs for all data */}
+            <input type="hidden" name="displayName" value={profileData.displayName} />
+            <input type="hidden" name="location" value={profileData.location} />
+            <input type="hidden" name="website" value={profileData.website} />
+            <input type="hidden" name="userType" value={profileData.userType} />
+            <input type="hidden" name="profileImage" value={profileData.profileImage} />
+            <input type="hidden" name="coverImage" value={profileData.coverImage} />
+            <input type="hidden" name="bio" value={profileData.bio} />
+
             {/* Step 1: Basic Information */}
             {step === 1 && (
               <div className="space-y-6 animate-slide-in">
@@ -264,7 +199,7 @@ export default function ProfileSetupPage() {
                     Your name and location help others find and connect with you. Share where you're based and how people can reach you. This information will be visible on your profile and helps build trust with potential collaborators.
                   </p>
                 </div>
-                
+
                 <div className="space-y-6">
                   <div>
                     <label className="block text-xs font-light text-white/70 mb-2 uppercase tracking-wider">
@@ -338,23 +273,22 @@ export default function ProfileSetupPage() {
                     You can always update this later in your settings
                   </p>
                 </div>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <button
+                    type="button"
                     onClick={() =>
                       setProfileData({ ...profileData, userType: 'creator' })
                     }
-                    className={`group relative p-6 rounded-2xl border transition-all duration-300 text-left overflow-hidden ${
-                      profileData.userType === 'creator'
+                    className={`group relative p-6 rounded-2xl border transition-all duration-300 text-left overflow-hidden ${profileData.userType === 'creator'
                         ? 'border-white/20 bg-white/5'
                         : 'border-white/5 hover:border-white/10 bg-white/2'
-                    }`}
+                      }`}
                   >
                     <div className="relative z-10">
                       <div className="flex items-start gap-4 mb-4">
-                        <div className={`w-12 h-12 rounded-xl bg-white/10 border border-white/10 flex items-center justify-center transition-transform ${
-                          profileData.userType === 'creator' ? 'scale-105' : ''
-                        }`}>
+                        <div className={`w-12 h-12 rounded-xl bg-white/10 border border-white/10 flex items-center justify-center transition-transform ${profileData.userType === 'creator' ? 'scale-105' : ''
+                          }`}>
                           <Sparkles className="w-6 h-6 text-white" />
                         </div>
                         <div className="flex-1">
@@ -375,20 +309,19 @@ export default function ProfileSetupPage() {
                   </button>
 
                   <button
+                    type="button"
                     onClick={() =>
                       setProfileData({ ...profileData, userType: 'professional' })
                     }
-                    className={`group relative p-6 rounded-2xl border transition-all duration-300 text-left overflow-hidden ${
-                      profileData.userType === 'professional'
+                    className={`group relative p-6 rounded-2xl border transition-all duration-300 text-left overflow-hidden ${profileData.userType === 'professional'
                         ? 'border-white/20 bg-white/5'
                         : 'border-white/5 hover:border-white/10 bg-white/2'
-                    }`}
+                      }`}
                   >
                     <div className="relative z-10">
                       <div className="flex items-start gap-4 mb-4">
-                        <div className={`w-12 h-12 rounded-xl bg-white/10 border border-white/10 flex items-center justify-center transition-transform ${
-                          profileData.userType === 'professional' ? 'scale-105' : ''
-                        }`}>
+                        <div className={`w-12 h-12 rounded-xl bg-white/10 border border-white/10 flex items-center justify-center transition-transform ${profileData.userType === 'professional' ? 'scale-105' : ''
+                          }`}>
                           <Briefcase className="w-6 h-6 text-white" />
                         </div>
                         <div className="flex-1">
@@ -412,7 +345,6 @@ export default function ProfileSetupPage() {
             )}
 
             {/* Step 3: Profile Photo */}
-            {/* COMMENTED OUT - Image upload section disabled for now */}
             {step === 3 && (
               <div className="space-y-6 animate-slide-in">
                 <div className="mb-10">
@@ -471,10 +403,10 @@ export default function ProfileSetupPage() {
               </div>
             )}
 
-            {error && (
+            {(error || state?.error) && (
               <div className="mt-6 p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-sm flex items-center gap-2 animate-shake">
                 <span>⚠</span>
-                {error}
+                {error || state?.error}
               </div>
             )}
 
@@ -482,6 +414,7 @@ export default function ProfileSetupPage() {
             <div className="flex gap-4 mt-10 pt-8 border-t border-white/5">
               {step > 1 && (
                 <button
+                  type="button"
                   onClick={handleBack}
                   className="btn-secondary flex-1 inline-flex items-center justify-center gap-2 py-4 text-base font-light group"
                 >
@@ -489,32 +422,40 @@ export default function ProfileSetupPage() {
                   Back
                 </button>
               )}
-              <button
-                onClick={step === 4 ? handleSubmit : handleNext}
-                disabled={loading}
-                className="btn-primary flex-1 inline-flex items-center justify-center gap-2 py-4 text-base font-light group relative overflow-hidden"
-              >
-                <span className="relative z-10 flex items-center gap-2">
-                  {loading ? (
-                    <>
-                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                      Creating...
-                    </>
-                  ) : step === 4 ? (
-                    <>
-                      Complete Profile
-                      <Check className="w-4 h-4" />
-                    </>
-                  ) : (
-                    <>
-                      Continue
-                      <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                    </>
-                  )}
-                </span>
-              </button>
+              {step === 4 ? (
+                <button
+                  type="submit"
+                  disabled={isPending}
+                  className="btn-primary flex-1 inline-flex items-center justify-center gap-2 py-4 text-base font-light group relative overflow-hidden"
+                >
+                  <span className="relative z-10 flex items-center gap-2">
+                    {isPending ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                        Creating...
+                      </>
+                    ) : (
+                      <>
+                        Complete Profile
+                        <Check className="w-4 h-4" />
+                      </>
+                    )}
+                  </span>
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={handleNext}
+                  className="btn-primary flex-1 inline-flex items-center justify-center gap-2 py-4 text-base font-light group relative overflow-hidden"
+                >
+                  <span className="relative z-10 flex items-center gap-2">
+                    Continue
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </span>
+                </button>
+              )}
             </div>
-          </div>
+          </form>
         </div>
       </div>
     </div>
