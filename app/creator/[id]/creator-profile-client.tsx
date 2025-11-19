@@ -115,128 +115,134 @@ export default function CreatorProfileClient({ creator, socials, currentUser }: 
                                 </div>
                             </div>
                         </div>
+                        {creator.website && (
+                            <a
+                                href={creator.website}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-4 p-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 transition-all group mt-6"
                             >
-                        <div className="w-10 h-10 rounded-lg bg-white/10 border border-white/20 flex items-center justify-center">
-                            <Globe className="w-5 h-5 text-white" />
-                        </div>
-                        <div className="flex-1">
-                            <p className="text-xs text-white/50 mb-1">Website</p>
-                            <p className="text-white font-semibold group-hover:text-white/80 transition-colors">Visit Site</p>
-                        </div>
-                        <ExternalLink className="w-4 h-4 text-white/40 group-hover:text-white transition-colors" />
-                    </a>
+                                <div className="w-10 h-10 rounded-lg bg-white/10 border border-white/20 flex items-center justify-center">
+                                    <Globe className="w-5 h-5 text-white" />
+                                </div>
+                                <div className="flex-1">
+                                    <p className="text-xs text-white/50 mb-1">Website</p>
+                                    <p className="text-white font-semibold group-hover:text-white/80 transition-colors">Visit Site</p>
+                                </div>
+                                <ExternalLink className="w-4 h-4 text-white/40 group-hover:text-white transition-colors" />
+                            </a>
                         )}
+                    </div>
+
+                    {/* Social Links - Quick Access */}
+                    {socials.length > 0 && (
+                        <div className="pt-6 border-t border-white/10">
+                            <h3 className="text-lg md:text-xl font-bold text-white mb-4">Connect</h3>
+                            <div className="flex flex-wrap gap-3">
+                                {socials.map((social) => {
+                                    const getPlatformIcon = (platform: string) => {
+                                        switch (platform.toLowerCase()) {
+                                            case 'instagram': return Instagram
+                                            case 'twitter': return Twitter
+                                            case 'youtube': return Youtube
+                                            case 'twitch': return Twitch
+                                            case 'tiktok': return Music
+                                            default: return ExternalLink
+                                        }
+                                    }
+                                    const Icon = getPlatformIcon(social.platform)
+                                    const getGradient = (platform: string) => {
+                                        switch (platform.toLowerCase()) {
+                                            case 'instagram': return 'from-white/20 to-white/10'
+                                            case 'twitter': return 'from-white/20 to-white/10'
+                                            case 'youtube': return 'from-white/20 to-white/10'
+                                            case 'twitch': return 'from-white/20 to-white/10'
+                                            case 'tiktok': return 'from-white/20 to-white/10'
+                                            default: return 'from-white/20 to-white/10'
+                                        }
+                                    }
+                                    return (
+                                        <a
+                                            key={social.id}
+                                            href={social.url || `https://${social.platform}.com/${social.handle}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="glass-card px-4 py-3 rounded-xl hover:scale-105 transition-all inline-flex items-center gap-3 group"
+                                        >
+                                            <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${getGradient(social.platform)} flex items-center justify-center`}>
+                                                <Icon className="w-4 h-4 text-white" />
+                                            </div>
+                                            <div>
+                                                <p className="text-white/80 group-hover:text-white font-semibold text-sm capitalize">{social.platform}</p>
+                                                <p className="text-white/50 text-xs">@{social.handle}</p>
+                                            </div>
+                                            <ExternalLink className="w-4 h-4 text-white/40 group-hover:text-white transition-colors ml-2" />
+                                        </a>
+                                    )
+                                })}
+                            </div>
+                        </div>
+                    )}
                 </div>
 
-                {/* Social Links - Quick Access */}
+                {/* Social Media Feeds */}
                 {socials.length > 0 && (
-                    <div className="pt-6 border-t border-white/10">
-                        <h3 className="text-lg md:text-xl font-bold text-white mb-4">Connect</h3>
-                        <div className="flex flex-wrap gap-3">
-                            {socials.map((social) => {
-                                const getPlatformIcon = (platform: string) => {
-                                    switch (platform.toLowerCase()) {
-                                        case 'instagram': return Instagram
-                                        case 'twitter': return Twitter
-                                        case 'youtube': return Youtube
-                                        case 'twitch': return Twitch
-                                        case 'tiktok': return Music
-                                        default: return ExternalLink
-                                    }
-                                }
-                                const Icon = getPlatformIcon(social.platform)
-                                const getGradient = (platform: string) => {
-                                    switch (platform.toLowerCase()) {
-                                        case 'instagram': return 'from-white/20 to-white/10'
-                                        case 'twitter': return 'from-white/20 to-white/10'
-                                        case 'youtube': return 'from-white/20 to-white/10'
-                                        case 'twitch': return 'from-white/20 to-white/10'
-                                        case 'tiktok': return 'from-white/20 to-white/10'
-                                        default: return 'from-white/20 to-white/10'
-                                    }
-                                }
-                                return (
-                                    <a
-                                        key={social.id}
-                                        href={social.url || `https://${social.platform}.com/${social.handle}`}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="glass-card px-4 py-3 rounded-xl hover:scale-105 transition-all inline-flex items-center gap-3 group"
-                                    >
-                                        <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${getGradient(social.platform)} flex items-center justify-center`}>
-                                            <Icon className="w-4 h-4 text-white" />
-                                        </div>
-                                        <div>
-                                            <p className="text-white/80 group-hover:text-white font-semibold text-sm capitalize">{social.platform}</p>
-                                            <p className="text-white/50 text-xs">@{social.handle}</p>
-                                        </div>
-                                        <ExternalLink className="w-4 h-4 text-white/40 group-hover:text-white transition-colors ml-2" />
-                                    </a>
-                                )
-                            })}
+                    <div className="mb-8 fade-in">
+                        <h2 className="text-3xl md:text-4xl font-black text-white mb-2">
+                            <span className="gradient-text">Social</span> <span className="text-white">Presence</span>
+                        </h2>
+                        <p className="text-white/60 mb-6">Check out their latest content across platforms</p>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {socials.map((social) => (
+                                <SocialEmbed
+                                    key={social.id}
+                                    platform={social.platform}
+                                    handle={social.handle}
+                                    url={social.url}
+                                />
+                            ))}
                         </div>
                     </div>
                 )}
-            </div>
 
-            {/* Social Media Feeds */}
-            {socials.length > 0 && (
-                <div className="mb-8 fade-in">
-                    <h2 className="text-3xl md:text-4xl font-black text-white mb-2">
-                        <span className="gradient-text">Social</span> <span className="text-white">Presence</span>
-                    </h2>
-                    <p className="text-white/60 mb-6">Check out their latest content across platforms</p>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {socials.map((social) => (
-                            <SocialEmbed
-                                key={social.id}
-                                platform={social.platform}
-                                handle={social.handle}
-                                url={social.url}
-                            />
-                        ))}
-                    </div>
-                </div>
-            )}
-
-            {/* Additional Sections */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                {/* Portfolio Preview */}
-                <div className="glass-card p-6 md:p-8">
-                    <h2 className="text-2xl font-black text-white mb-6">Portfolio</h2>
-                    <div className="grid grid-cols-2 gap-3">
-                        {[1, 2, 3, 4].map((i) => (
-                            <div key={i} className="aspect-square rounded-xl bg-white/5 overflow-hidden group cursor-pointer">
-                                <div className="w-full h-full bg-white/5 group-hover:bg-white/10 transition-opacity"></div>
-                            </div>
-                        ))}
-                    </div>
-                    <button className="w-full mt-4 btn-secondary text-sm">
-                        View Full Portfolio
-                    </button>
-                </div>
-
-                {/* Recent Activity */}
-                <div className="glass-card p-6 md:p-8">
-                    <h2 className="text-2xl font-black text-white mb-6">Recent Activity</h2>
-                    <div className="space-y-4">
-                        {[
-                            { text: 'Completed collaboration with @designer', time: '2 days ago' },
-                            { text: 'Posted new portfolio piece', time: '5 days ago' },
-                            { text: 'Received 5-star review', time: '1 week ago' },
-                        ].map((activity, i) => (
-                            <div key={i} className="flex items-start gap-3 p-3 rounded-xl bg-white/5">
-                                <div className="w-2 h-2 rounded-full bg-white/40 mt-2"></div>
-                                <div className="flex-1">
-                                    <p className="text-white/80 text-sm">{activity.text}</p>
-                                    <p className="text-white/40 text-xs mt-1">{activity.time}</p>
+                {/* Additional Sections */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    {/* Portfolio Preview */}
+                    <div className="glass-card p-6 md:p-8">
+                        <h2 className="text-2xl font-black text-white mb-6">Portfolio</h2>
+                        <div className="grid grid-cols-2 gap-3">
+                            {[1, 2, 3, 4].map((i) => (
+                                <div key={i} className="aspect-square rounded-xl bg-white/5 overflow-hidden group cursor-pointer">
+                                    <div className="w-full h-full bg-white/5 group-hover:bg-white/10 transition-opacity"></div>
                                 </div>
-                            </div>
-                        ))}
+                            ))}
+                        </div>
+                        <button className="w-full mt-4 btn-secondary text-sm">
+                            View Full Portfolio
+                        </button>
+                    </div>
+
+                    {/* Recent Activity */}
+                    <div className="glass-card p-6 md:p-8">
+                        <h2 className="text-2xl font-black text-white mb-6">Recent Activity</h2>
+                        <div className="space-y-4">
+                            {[
+                                { text: 'Completed collaboration with @designer', time: '2 days ago' },
+                                { text: 'Posted new portfolio piece', time: '5 days ago' },
+                                { text: 'Received 5-star review', time: '1 week ago' },
+                            ].map((activity, i) => (
+                                <div key={i} className="flex items-start gap-3 p-3 rounded-xl bg-white/5">
+                                    <div className="w-2 h-2 rounded-full bg-white/40 mt-2"></div>
+                                    <div className="flex-1">
+                                        <p className="text-white/80 text-sm">{activity.text}</p>
+                                        <p className="text-white/40 text-xs mt-1">{activity.time}</p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
         </div >
     )
 }
