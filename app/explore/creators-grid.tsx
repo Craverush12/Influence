@@ -1,8 +1,8 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { Search, Heart, MessageSquare, Star, ArrowRight, MapPin } from 'lucide-react'
+import { Search, Heart, MessageSquare, Star, ArrowRight, MapPin, Filter } from 'lucide-react'
 import Link from 'next/link'
 
 interface Creator {
@@ -27,208 +27,186 @@ export default function CreatorsGrid({ initialCreators }: CreatorsGridProps) {
     const [locationFilter, setLocationFilter] = useState(searchParams.get('location') || '')
     const [liked, setLiked] = useState(new Set<string>())
 
-    // Update creators when initialCreators prop changes (which happens when server re-renders)
     useEffect(() => {
         setCreators(initialCreators)
     }, [initialCreators])
 
-    // Debounce search URL updates
     useEffect(() => {
         const timer = setTimeout(() => {
             const params = new URLSearchParams(searchParams.toString())
-
-            if (searchTerm) {
-                params.set('q', searchTerm)
-            } else {
-                params.delete('q')
-            }
-
-            if (locationFilter) {
-                params.set('location', locationFilter)
-            } else {
-                params.delete('location')
-            }
-
+            if (searchTerm) params.set('q', searchTerm)
+            else params.delete('q')
+            if (locationFilter) params.set('location', locationFilter)
+            else params.delete('location')
             router.push(`/explore?${params.toString()}`)
         }, 500)
-
         return () => clearTimeout(timer)
     }, [searchTerm, locationFilter, router, searchParams])
 
     const toggleLike = (creatorId: string) => {
         const newLiked = new Set(liked)
-        if (newLiked.has(creatorId)) {
-            newLiked.delete(creatorId)
-        } else {
-            newLiked.add(creatorId)
-        }
+        if (newLiked.has(creatorId)) newLiked.delete(creatorId)
+        else newLiked.add(creatorId)
         setLiked(newLiked)
     }
 
     return (
         <>
-            {/* Header */}
-            <div className="mb-12 fade-in">
-                <h1 className="text-5xl md:text-6xl font-black mb-4">
-                    <span className="gradient-text">Discover</span> <span className="text-white">Creators</span>
-                </h1>
-                <p className="text-xl text-white/60 mb-8">Find amazing collaborators in our community</p>
+            {/* Header & Search */}
+            <div className="mb-12 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+                <div className="text-center max-w-2xl mx-auto">
+                    <h1 className="text-4xl md:text-6xl font-bold mb-4 tracking-tight">
+                        Discover <span className="text-primary">Creators</span>
+                    </h1>
+                    <p className="text-lg text-muted-foreground">
+                        Find amazing collaborators in our community. Connect, create, and grow together.
+                    </p>
+                </div>
 
-                {/* Search Bar & Filters */}
-                <div className="flex flex-col md:flex-row gap-4 max-w-4xl">
+                <div className="bg-card/50 backdrop-blur-sm border border-border rounded-2xl p-2 max-w-3xl mx-auto shadow-sm flex flex-col md:flex-row gap-2">
                     <div className="relative flex-1">
-                        <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40" />
+                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                         <input
                             type="text"
-                            placeholder="Search creators by name, bio..."
+                            placeholder="Search by name or bio..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="input-modern w-full pl-14 pr-5"
+                            className="w-full bg-transparent border-none focus:ring-0 pl-12 pr-4 py-3 text-foreground placeholder:text-muted-foreground"
                         />
                     </div>
-                    <div className="relative md:w-64">
-                        <MapPin className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40" />
+                    <div className="h-px md:h-auto md:w-px bg-border mx-2"></div>
+                    <div className="relative md:w-1/3">
+                        <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                         <input
                             type="text"
-                            placeholder="Filter by location..."
+                            placeholder="Location..."
                             value={locationFilter}
                             onChange={(e) => setLocationFilter(e.target.value)}
-                            className="input-modern w-full pl-14 pr-5"
+                            className="w-full bg-transparent border-none focus:ring-0 pl-12 pr-4 py-3 text-foreground placeholder:text-muted-foreground"
                         />
                     </div>
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {/* Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {creators.map((creator, i) => (
                     <Link
                         key={creator.id}
                         href={`/creator/${creator.id}`}
-                        className="floating-card overflow-hidden stagger-item group cursor-pointer block"
-                        style={{ animationDelay: `${i * 0.1}s` }}
+                        className="group relative bg-card hover:bg-accent/5 border border-border rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-primary/20"
                     >
-                        {/* Cover Image with Gradient Overlay */}
-                        <div className="w-full h-40 bg-white/5 overflow-hidden relative">
+                        {/* Cover */}
+                        <div className="h-48 relative overflow-hidden bg-muted">
                             {creator.cover_image_url ? (
                                 <img
-                                    src={creator.cover_image_url || "/placeholder.svg"}
+                                    src={creator.cover_image_url}
                                     alt="cover"
-                                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                                 />
                             ) : (
-                                <div className="w-full h-full bg-white/5"></div>
+                                <div className="w-full h-full bg-gradient-to-br from-primary/5 to-primary/10"></div>
                             )}
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+                            <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent"></div>
 
-                            {/* Like Button - Floating */}
                             <button
                                 onClick={(e) => {
                                     e.preventDefault()
                                     e.stopPropagation()
                                     toggleLike(creator.id)
                                 }}
-                                className={`absolute top-4 right-4 p-2.5 rounded-xl backdrop-blur-md transition-all z-20 ${liked.has(creator.id)
-                                    ? 'bg-red-500/30 text-red-400 border border-red-500/50'
-                                    : 'bg-black/30 text-white/70 border border-white/20 hover:bg-red-500/20 hover:text-red-400 hover:border-red-500/50'
+                                className={`absolute top-4 right-4 p-2 rounded-full backdrop-blur-md transition-all ${liked.has(creator.id)
+                                        ? 'bg-red-500/10 text-red-500'
+                                        : 'bg-background/50 text-muted-foreground hover:bg-background hover:text-foreground'
                                     }`}
                             >
                                 <Heart className={`w-5 h-5 ${liked.has(creator.id) ? 'fill-current' : ''}`} />
                             </button>
                         </div>
 
-                        <div className="p-6 relative">
-                            {/* Profile Avatar - Floating */}
-                            <div className="absolute -top-12 left-6 z-10">
-                                <div className="relative">
-                                    <div className="w-20 h-20 rounded-2xl bg-white/10 border-4 border-black shadow-2xl group-hover:scale-110 transition-transform duration-300 overflow-hidden">
-                                        {creator.profile_image_url ? (
-                                            <img
-                                                src={creator.profile_image_url || "/placeholder.svg"}
-                                                alt={creator.display_name}
-                                                className="w-full h-full object-cover"
-                                            />
-                                        ) : (
-                                            <div className="w-full h-full bg-white/10 flex items-center justify-center text-white font-light text-2xl">
-                                                {(creator.display_name || creator.username)?.[0]?.toUpperCase()}
-                                            </div>
-                                        )}
-                                    </div>
-                                    {/* Online Status Indicator */}
-                                    <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 rounded-full border-4 border-black"></div>
+                        {/* Profile Info */}
+                        <div className="p-6 pt-0 relative">
+                            <div className="absolute -top-12 left-6">
+                                <div className="w-24 h-24 rounded-2xl border-4 border-background bg-muted overflow-hidden shadow-sm group-hover:scale-105 transition-transform duration-300">
+                                    {creator.profile_image_url ? (
+                                        <img
+                                            src={creator.profile_image_url}
+                                            alt={creator.display_name}
+                                            className="w-full h-full object-cover"
+                                        />
+                                    ) : (
+                                        <div className="w-full h-full flex items-center justify-center text-2xl font-bold text-muted-foreground bg-muted">
+                                            {(creator.display_name || creator.username)?.[0]?.toUpperCase()}
+                                        </div>
+                                    )}
                                 </div>
                             </div>
 
-                            {/* Content */}
-                            <div className="pt-12">
-                                {/* Name & Username */}
-                                <div className="mb-4">
-                                    <h3 className="text-xl font-light text-white mb-1 transition-all">
-                                        {creator.display_name || creator.username}
-                                    </h3>
-                                    <p className="text-sm text-white/50 font-medium">@{creator.username}</p>
+                            <div className="mt-14">
+                                <div className="flex justify-between items-start mb-2">
+                                    <div>
+                                        <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">
+                                            {creator.display_name || creator.username}
+                                        </h3>
+                                        <p className="text-sm text-muted-foreground font-medium">@{creator.username}</p>
+                                    </div>
+                                    <div className="flex items-center gap-1 bg-primary/5 px-2 py-1 rounded-lg">
+                                        <Star className="w-3.5 h-3.5 fill-primary text-primary" />
+                                        <span className="text-sm font-bold text-primary">4.9</span>
+                                    </div>
                                 </div>
 
-                                {/* Bio */}
                                 {creator.bio && (
-                                    <p className="text-sm text-white/70 line-clamp-2 mb-4 leading-relaxed">
+                                    <p className="text-sm text-muted-foreground line-clamp-2 mb-4 leading-relaxed">
                                         {creator.bio}
                                     </p>
                                 )}
 
-                                {/* Stats Row */}
-                                <div className="flex items-center gap-4 mb-4 pb-4 border-b border-white/10">
-                                    <div className="flex items-center gap-1.5">
-                                        <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                                        <span className="text-sm font-bold text-white">4.9</span>
-                                        <span className="text-xs text-white/40">(24)</span>
-                                    </div>
-                                    {creator.location && (
-                                        <div className="flex items-center gap-1.5">
-                                            <div className="w-1 h-1 rounded-full bg-white/40"></div>
-                                            <span className="text-xs text-white/50">{creator.location}</span>
+                                <div className="flex items-center justify-between pt-4 border-t border-border/50">
+                                    {creator.location ? (
+                                        <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                                            <MapPin className="w-3.5 h-3.5" />
+                                            {creator.location}
                                         </div>
+                                    ) : (
+                                        <div></div>
                                     )}
-                                </div>
 
-                                {/* Action Buttons */}
-                                <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
-                                    <span className="flex-1 btn-primary text-sm inline-flex items-center justify-center gap-2 group-hover:scale-105 transition-transform pointer-events-none">
-                                        View Profile
-                                        <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                                    </span>
-                                    <button
-                                        onClick={(e) => {
-                                            e.preventDefault()
-                                            e.stopPropagation()
-                                            // Handle message click - navigate to messages
-                                            router.push(`/messages?user=${creator.id}`)
-                                        }}
-                                        className="p-3 rounded-xl bg-white/5 text-white/70 hover:bg-white/10 hover:text-white transition-all group-hover:scale-105"
-                                    >
-                                        <MessageSquare className="w-5 h-5" />
-                                    </button>
+                                    <div className="flex gap-2">
+                                        <button
+                                            className="p-2 rounded-lg hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
+                                            onClick={(e) => {
+                                                e.preventDefault()
+                                                e.stopPropagation()
+                                                router.push(`/messages?user=${creator.id}`)
+                                            }}
+                                        >
+                                            <MessageSquare className="w-4 h-4" />
+                                        </button>
+                                        <div className="p-2 rounded-lg bg-primary/10 text-primary">
+                                            <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-
-                            {/* Hover Glow Effect */}
-                            <div className="absolute inset-0 bg-white/0 group-hover:bg-white/5 transition-all duration-500 rounded-2xl pointer-events-none"></div>
                         </div>
                     </Link>
                 ))}
             </div>
 
             {creators.length === 0 && (
-                <div className="text-center py-20 fade-in">
-                    <div className="w-20 h-20 rounded-full bg-white/5 flex items-center justify-center mx-auto mb-6">
-                        <Search className="w-10 h-10 text-white/40" />
+                <div className="text-center py-20">
+                    <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
+                        <Search className="w-8 h-8 text-muted-foreground" />
                     </div>
-                    <p className="text-white/60 mb-6 text-lg">No creators found matching your search</p>
+                    <h3 className="text-lg font-medium text-foreground mb-2">No creators found</h3>
+                    <p className="text-muted-foreground mb-6">Try adjusting your search or filters</p>
                     <button
                         onClick={() => {
                             setSearchTerm('')
                             setLocationFilter('')
                         }}
-                        className="btn-secondary inline-flex items-center gap-2"
+                        className="btn-secondary"
                     >
                         Clear Search
                     </button>

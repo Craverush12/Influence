@@ -4,6 +4,8 @@ import Link from 'next/link'
 import CreatorsGrid from './creators-grid'
 import { redirect } from 'next/navigation'
 import { getCurrentUser } from '@/lib/auth-service'
+import KarmaBalance from '@/components/karma-balance'
+import { ThemeToggle } from '@/components/theme-toggle'
 
 export default async function ExplorePage({
   searchParams,
@@ -36,28 +38,36 @@ export default async function ExplorePage({
   const { data: creators } = await dbQuery
 
   return (
-    <div className="min-h-screen hero-gradient relative overflow-hidden">
-      {/* Animated Background */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-white/2 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-white/2 rounded-full blur-3xl"></div>
-      </div>
-
+    <div className="min-h-screen bg-background text-foreground relative">
       {/* Navigation */}
-      <nav className="sticky top-0 z-50 nav-glass">
-        <div className="max-w-7xl mx-auto px-6 py-5 flex justify-between items-center">
+      <nav className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/50">
+        <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
           <Link href="/" className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center">
-              <Sparkles className="w-5 h-5 text-white" />
+            <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+              <Sparkles className="w-4 h-4 text-primary" />
             </div>
-            <span className="text-xl font-bold gradient-text">Creator Hub</span>
+            <span className="text-lg font-bold tracking-tight">Creator Hub</span>
           </Link>
-          <Link
-            href="/dashboard"
-            className="px-4 py-2 text-white/70 hover:text-white transition-colors rounded-lg hover:bg-white/5"
-          >
-            Dashboard
-          </Link>
+
+          <div className="flex items-center gap-4">
+            <ThemeToggle />
+            <KarmaBalance />
+            <Link
+              href="/dashboard"
+              className="btn-secondary text-sm py-2 px-4 h-auto"
+            >
+              Dashboard
+            </Link>
+            <Link href="/profile/setup" className="w-9 h-9 rounded-full bg-muted overflow-hidden border border-border">
+              {user.profile_image_url ? (
+                <img src={user.profile_image_url} alt="Profile" className="w-full h-full object-cover" />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center text-muted-foreground font-bold text-sm">
+                  {user.display_name?.[0] || user.email?.[0]}
+                </div>
+              )}
+            </Link>
+          </div>
         </div>
       </nav>
 

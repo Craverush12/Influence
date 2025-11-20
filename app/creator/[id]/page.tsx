@@ -16,9 +16,9 @@ export default async function CreatorProfilePage({ params }: { params: { id: str
 
   if (!creator) {
     return (
-      <div className="min-h-screen hero-gradient flex items-center justify-center px-4">
+      <div className="min-h-screen bg-background flex items-center justify-center px-4">
         <div className="text-center glass-card p-8">
-          <p className="text-white/60 mb-6 text-lg">Creator not found</p>
+          <p className="text-muted-foreground mb-6 text-lg">Creator not found</p>
           <Link href="/explore" className="btn-primary inline-flex items-center gap-2">
             <ArrowLeft className="w-4 h-4" />
             Back to Explore

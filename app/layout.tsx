@@ -1,21 +1,13 @@
 import type { Metadata } from 'next'
-import { Poppins, Playfair_Display } from 'next/font/google'
+import { Inter } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
+import { ThemeProvider } from '@/components/theme-provider'
 import './globals.css'
 
-// Elegant body font - Poppins (sophisticated, modern, elegant)
-const poppins = Poppins({
+// Modern, clean sans-serif font - Inter (standard for minimalistic UI)
+const inter = Inter({
   subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700'],
-  variable: '--font-poppins',
-  display: 'swap',
-})
-
-// Elegant display font - Playfair Display (classy, sophisticated serif)
-const playfair = Playfair_Display({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700', '800', '900'],
-  variable: '--font-playfair',
+  variable: '--font-inter',
   display: 'swap',
 })
 
@@ -31,17 +23,17 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className="dark" style={{
-      '--font-poppins': poppins.style.fontFamily,
-      '--font-playfair': playfair.style.fontFamily,
-    } as React.CSSProperties}>
-      <body className={poppins.className} style={{ 
-        backgroundColor: '#000000',
-        color: '#ffffff',
-        fontFamily: 'var(--font-poppins), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
-      }}>
-        {children}
-        <Analytics />
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${inter.variable} font-sans antialiased`}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+          <Analytics />
+        </ThemeProvider>
       </body>
     </html>
   )

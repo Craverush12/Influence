@@ -7,18 +7,10 @@ interface LiveStatsGraphProps {
     data?: any[]
 }
 
-// Mock data if none provided
-const defaultData = [
-    { name: 'Jan', followers: 4000, views: 2400, engagement: 2400 },
-    { name: 'Feb', followers: 3000, views: 1398, engagement: 2210 },
-    { name: 'Mar', followers: 2000, views: 9800, engagement: 2290 },
-    { name: 'Apr', followers: 2780, views: 3908, engagement: 2000 },
-    { name: 'May', followers: 1890, views: 4800, engagement: 2181 },
-    { name: 'Jun', followers: 2390, views: 3800, engagement: 2500 },
-    { name: 'Jul', followers: 3490, views: 4300, engagement: 2100 },
-]
+export default function LiveStatsGraph({ data }: LiveStatsGraphProps) {
+    // Use provided data or empty array to prevent errors
+    const chartData = data || []
 
-export default function LiveStatsGraph({ data = defaultData }: LiveStatsGraphProps) {
     return (
         <div className="glass-card p-6 md:p-8">
             <div className="flex items-center justify-between mb-8">

@@ -19,6 +19,7 @@ import {
 } from 'lucide-react'
 import { logout } from '@/app/actions/auth'
 import KarmaBalance from '@/components/karma-balance'
+import { ThemeToggle } from '@/components/theme-toggle'
 
 export default async function DashboardPage() {
   const user = await getCurrentUser()
@@ -45,38 +46,33 @@ export default async function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen hero-gradient relative overflow-hidden">
-      {/* Animated Background */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-white/2 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-white/2 rounded-full blur-3xl"></div>
-      </div>
-
+    <div className="min-h-screen bg-background text-foreground relative">
       {/* Navigation */}
-      <nav className="sticky top-0 z-50 nav-glass">
-        <div className="max-w-7xl mx-auto px-6 py-5 flex justify-between items-center">
+      <nav className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/50">
+        <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
           <Link href="/" className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center">
-              <Sparkles className="w-5 h-5 text-white" />
+            <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+              <Sparkles className="w-4 h-4 text-primary" />
             </div>
-            <span className="text-xl font-bold gradient-text">Creator Hub</span>
+            <span className="text-lg font-bold tracking-tight">Creator Hub</span>
           </Link>
 
           <div className="flex items-center gap-4">
+            <ThemeToggle />
             <KarmaBalance />
-            <Link href="/profile/setup" className="btn-secondary text-sm">
+            <Link href="/profile/setup" className="btn-secondary text-sm py-2 px-4 h-auto">
               Edit Profile
             </Link>
             <Link
               href="/explore"
-              className="flex items-center gap-2 px-4 py-2 text-white/70 hover:text-white transition-colors rounded-lg hover:bg-white/5"
+              className="flex items-center gap-2 px-4 py-2 text-muted-foreground hover:text-foreground transition-colors rounded-lg hover:bg-muted"
             >
               <Search className="w-5 h-5" />
               <span className="hidden md:inline">Explore</span>
             </Link>
             <Link
               href="/messages"
-              className="flex items-center gap-2 px-4 py-2 text-white/70 hover:text-white transition-colors rounded-lg hover:bg-white/5"
+              className="flex items-center gap-2 px-4 py-2 text-muted-foreground hover:text-foreground transition-colors rounded-lg hover:bg-muted"
             >
               <MessageSquare className="w-5 h-5" />
               <span className="hidden md:inline">Messages</span>
@@ -84,7 +80,7 @@ export default async function DashboardPage() {
             <form action={logout}>
               <button
                 type="submit"
-                className="flex items-center gap-2 px-4 py-2 text-white/70 hover:text-red-400 transition-colors rounded-lg hover:bg-white/5"
+                className="flex items-center gap-2 px-4 py-2 text-muted-foreground hover:text-destructive transition-colors rounded-lg hover:bg-muted"
               >
                 <LogOut className="w-5 h-5" />
                 <span className="hidden md:inline">Logout</span>
@@ -97,12 +93,11 @@ export default async function DashboardPage() {
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-6 py-12 relative z-10">
         {/* Welcome Section */}
-        <div className="mb-12 fade-in">
-          <h1 className="text-4xl md:text-6xl font-black mb-3">
-            <span className="text-white">Welcome back,</span>{' '}
-            <span className="gradient-text">{userProfile?.display_name || user.email}</span>
+        <div className="mb-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
+          <h1 className="text-3xl md:text-5xl font-bold mb-3 tracking-tight">
+            Welcome back, <span className="text-primary">{userProfile?.display_name || user.email}</span>
           </h1>
-          <p className="text-xl text-white/60">Ready to create something amazing today?</p>
+          <p className="text-lg text-muted-foreground">Ready to create something amazing today?</p>
         </div>
 
         {/* Stats Grid */}
@@ -113,45 +108,44 @@ export default async function DashboardPage() {
               value: stats.connections,
               label: 'Connections',
               sublabel: 'Collaborators found',
-              gradient: 'from-white/20 to-white/10',
-              delay: '0.1s'
+              color: 'text-blue-500',
+              bg: 'bg-blue-500/10',
             },
             {
               icon: MessageSquare,
               value: stats.messages,
               label: 'Messages',
               sublabel: 'Unread messages',
-              gradient: 'from-white/20 to-white/10',
-              delay: '0.2s'
+              color: 'text-purple-500',
+              bg: 'bg-purple-500/10',
             },
             {
               icon: Star,
               value: stats.rating,
               label: 'Rating',
               sublabel: 'Community score',
-              gradient: 'from-white/20 to-white/10',
-              delay: '0.3s'
+              color: 'text-yellow-500',
+              bg: 'bg-yellow-500/10',
             },
           ].map((stat, i) => {
             const Icon = stat.icon
             return (
               <div
                 key={i}
-                className="glass-card p-6 stagger-item group hover:scale-105 transition-all duration-300"
-                style={{ animationDelay: stat.delay }}
+                className="glass-card p-6 hover:scale-[1.02] transition-all duration-300 bg-card border-border"
               >
                 <div className="flex items-center justify-between mb-4">
-                  <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${stat.gradient} flex items-center justify-center group-hover:scale-110 transition-transform`}>
-                    <Icon className="w-7 h-7 text-white" />
+                  <div className={`w-12 h-12 rounded-xl ${stat.bg} flex items-center justify-center`}>
+                    <Icon className={`w-6 h-6 ${stat.color}`} />
                   </div>
                   <div className="text-right">
-                    <div className={`text-3xl font-black bg-gradient-to-r ${stat.gradient} bg-clip-text text-transparent`}>
+                    <div className="text-3xl font-bold text-foreground">
                       {stat.value}
                     </div>
                   </div>
                 </div>
-                <h3 className="text-white font-bold mb-1">{stat.label}</h3>
-                <p className="text-sm text-white/50">{stat.sublabel}</p>
+                <h3 className="font-bold text-foreground mb-1">{stat.label}</h3>
+                <p className="text-sm text-muted-foreground">{stat.sublabel}</p>
               </div>
             )
           })}
@@ -165,40 +159,40 @@ export default async function DashboardPage() {
               icon: Search,
               title: 'Discover Creators',
               desc: 'Find talented collaborators and professionals',
-              gradient: 'from-white/20 to-white/10',
-              delay: '0.4s'
+              color: 'text-blue-500',
+              bg: 'bg-blue-500/10',
             },
             {
               href: '/messages',
               icon: MessageSquare,
               title: 'Messages',
               desc: 'Chat with your collaborators',
-              gradient: 'from-white/20 to-white/10',
-              delay: '0.5s'
+              color: 'text-purple-500',
+              bg: 'bg-purple-500/10',
             },
             {
               href: '/profile/setup',
               icon: Users,
               title: 'My Profile',
               desc: 'View and edit your creator profile',
-              gradient: 'from-white/20 to-white/10',
-              delay: '0.6s'
+              color: 'text-green-500',
+              bg: 'bg-green-500/10',
             },
             {
               href: '/profile/socials',
               icon: Sparkles,
               title: 'Connect Socials',
               desc: 'Link your Instagram, TikTok, YouTube & more',
-              gradient: 'from-white/20 via-white/10 to-white/20',
-              delay: '0.7s'
+              color: 'text-pink-500',
+              bg: 'bg-pink-500/10',
             },
             {
               href: '/settings',
               icon: Settings,
               title: 'Settings',
               desc: 'Manage your account preferences',
-              gradient: 'from-white/20 via-white/10 to-white/20',
-              delay: '0.7s'
+              color: 'text-gray-500',
+              bg: 'bg-gray-500/10',
             },
           ].map((action, i) => {
             const Icon = action.icon
@@ -206,16 +200,15 @@ export default async function DashboardPage() {
               <Link
                 key={i}
                 href={action.href}
-                className="floating-card p-8 stagger-item group cursor-pointer"
-                style={{ animationDelay: action.delay }}
+                className="glass-card p-8 hover:scale-[1.01] transition-all group cursor-pointer bg-card border-border hover:border-primary/20"
               >
-                <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${action.gradient} flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300`}>
-                  <Icon className="w-8 h-8 text-white" />
+                <div className={`w-14 h-14 rounded-2xl ${action.bg} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}>
+                  <Icon className={`w-7 h-7 ${action.color}`} />
                 </div>
-                <h3 className="text-2xl font-bold text-white mb-2">{action.title}</h3>
-                <p className="text-white/60 mb-4">{action.desc}</p>
-                <div className="flex items-center gap-2 text-sm font-semibold text-white/70 group-hover:text-white transition-colors">
-                  <span>Explore</span>
+                <h3 className="text-xl font-bold text-foreground mb-2 group-hover:text-primary transition-colors">{action.title}</h3>
+                <p className="text-muted-foreground mb-4">{action.desc}</p>
+                <div className="flex items-center gap-2 text-sm font-semibold text-muted-foreground group-hover:text-foreground transition-colors">
+                  <span>Open</span>
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </div>
               </Link>

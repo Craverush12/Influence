@@ -3,7 +3,7 @@
 import { useActionState } from 'react'
 import Link from 'next/link'
 import { login } from '@/app/actions/auth'
-import { ArrowRight, Eye, EyeOff } from 'lucide-react'
+import { ArrowRight, Eye, EyeOff, Sparkles } from 'lucide-react'
 import { useState } from 'react'
 
 const initialState = {
@@ -16,33 +16,35 @@ export default function LoginPage() {
   const [focusedField, setFocusedField] = useState<string | null>(null)
 
   return (
-    <div className="min-h-screen hero-gradient relative overflow-hidden flex items-center justify-center px-4 py-16">
+    <div className="min-h-screen bg-background relative overflow-hidden flex items-center justify-center px-4 py-16">
       {/* Minimal Background */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-white/2 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-white/2 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-primary/5 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-primary/5 rounded-full blur-3xl"></div>
       </div>
 
       <div className="w-full max-w-md relative z-10">
         {/* Elegant Header */}
-        <div className="text-center mb-12 fade-in">
-          <h1 className="text-4xl md:text-5xl font-light mb-6" style={{ fontFamily: 'var(--font-playfair, "Playfair Display", serif)' }}>
-            <span className="gradient-text">Welcome Back</span>
+        <div className="text-center mb-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
+          <div className="flex justify-center mb-6">
+            <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center">
+              <Sparkles className="w-6 h-6 text-primary" />
+            </div>
+          </div>
+          <h1 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight text-foreground">
+            Welcome Back
           </h1>
-          <p className="text-base text-white/60 leading-relaxed max-w-md mx-auto mb-2" style={{ letterSpacing: '0.03em', fontWeight: 300 }}>
+          <p className="text-base text-muted-foreground leading-relaxed max-w-md mx-auto mb-2">
             Continue your creative journey. Connect with collaborators, discover new opportunities, and keep building the future you envision.
-          </p>
-          <p className="text-sm text-white/50 mt-4" style={{ letterSpacing: '0.02em', fontWeight: 300 }}>
-            Your community is waiting for you.
           </p>
         </div>
 
         {/* Minimal Form Card */}
-        <div className="glass-card p-8 md:p-10 fade-in">
+        <div className="glass-card p-8 md:p-10 animate-in fade-in slide-in-from-bottom-8 duration-700 bg-card border border-border">
           <form action={action} className="space-y-5">
             {/* Email */}
             <div className="space-y-2">
-              <label className="block text-xs font-light text-white/70 mb-2 uppercase tracking-wider">
+              <label className="block text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wider">
                 Email Address
               </label>
               <div className="relative">
@@ -51,7 +53,7 @@ export default function LoginPage() {
                   type="email"
                   onFocus={() => setFocusedField('email')}
                   onBlur={() => setFocusedField(null)}
-                  className={`input-modern w-full pl-4 transition-all duration-300 text-base font-light ${focusedField === 'email' ? 'ring-1 ring-white/20 bg-white/5' : ''
+                  className={`w-full bg-muted/50 border border-border rounded-xl px-4 py-3 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-300 ${focusedField === 'email' ? 'bg-background' : ''
                     }`}
                   placeholder="your@email.com"
                   required
@@ -62,7 +64,7 @@ export default function LoginPage() {
 
             {/* Password */}
             <div className="space-y-2">
-              <label className="block text-xs font-light text-white/70 mb-2 uppercase tracking-wider">
+              <label className="block text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wider">
                 Password
               </label>
               <div className="relative">
@@ -71,7 +73,7 @@ export default function LoginPage() {
                   type={showPassword ? 'text' : 'password'}
                   onFocus={() => setFocusedField('password')}
                   onBlur={() => setFocusedField(null)}
-                  className={`input-modern w-full pl-4 pr-12 transition-all duration-300 text-base font-light ${focusedField === 'password' ? 'ring-1 ring-white/20 bg-white/5' : ''
+                  className={`w-full bg-muted/50 border border-border rounded-xl px-4 py-3 pr-12 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-300 ${focusedField === 'password' ? 'bg-background' : ''
                     }`}
                   placeholder="Enter your password"
                   required
@@ -79,7 +81,7 @@ export default function LoginPage() {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/60 transition-colors"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
@@ -87,7 +89,7 @@ export default function LoginPage() {
             </div>
 
             {state?.error && (
-              <div className="p-4 rounded-lg bg-red-500/5 border border-red-500/20 text-red-400/80 text-sm flex items-center gap-2 font-light">
+              <div className="p-4 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-sm flex items-center gap-2">
                 <span>⚠</span>
                 {state.error}
               </div>
@@ -96,12 +98,12 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={isPending}
-              className="btn-primary w-full inline-flex items-center justify-center gap-2 py-4 text-base font-light group relative overflow-hidden mt-8"
+              className="btn-primary w-full inline-flex items-center justify-center gap-2 py-4 text-base font-medium group relative overflow-hidden mt-8"
             >
               <span className="relative z-10 flex items-center gap-2">
                 {isPending ? (
                   <>
-                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                    <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin"></div>
                     Signing in...
                   </>
                 ) : (
@@ -114,10 +116,10 @@ export default function LoginPage() {
             </button>
           </form>
 
-          <div className="mt-8 pt-6 border-t border-white/5">
-            <p className="text-center text-white/50 text-sm font-light" style={{ letterSpacing: '0.02em' }}>
+          <div className="mt-8 pt-6 border-t border-border">
+            <p className="text-center text-muted-foreground text-sm">
               Don't have an account?{' '}
-              <Link href="/auth/signup" className="font-normal gradient-text hover:opacity-80 transition-opacity">
+              <Link href="/auth/signup" className="font-medium text-primary hover:underline transition-all">
                 Sign Up
               </Link>
             </p>
