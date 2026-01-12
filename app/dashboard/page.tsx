@@ -20,9 +20,10 @@ import {
 import { logout } from '@/app/actions/auth'
 import KarmaBalance from '@/components/karma-balance'
 import { ThemeToggle } from '@/components/theme-toggle'
-import { ProfileCompletionCard } from '@/components/profile-completion-card'
-import { DashboardGamification } from '@/components/dashboard-gamification'
-import { VariableRewards } from '@/components/variable-rewards'
+// Temporarily commented out for build fix
+// import { ProfileCompletionCard } from '@/components/profile-completion-card'
+// import { DashboardGamification } from '@/components/dashboard-gamification'
+// import { VariableRewards } from '@/components/variable-rewards'
 
 export default async function DashboardPage() {
   const user = await getCurrentUser()
@@ -103,10 +104,10 @@ export default async function DashboardPage() {
           <p className="text-lg text-muted-foreground">Ready to create something amazing today?</p>
         </div>
 
-        {/* Profile Completion - Zeigarnik Effect */}
-        <div className="mb-8">
+        {/* Profile Completion - Temporarily disabled for build */}
+        {/* <div className="mb-8">
           <ProfileCompletionCard />
-        </div>
+        </div> */}
 
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
@@ -159,15 +160,15 @@ export default async function DashboardPage() {
           })}
         </div>
 
-        {/* Gamification Section */}
-        <div className="mb-8">
+        {/* Gamification Section - Temporarily disabled for build */}
+        {/* <div className="mb-8">
           <DashboardGamification />
-        </div>
+        </div> */}
 
-        {/* Variable Rewards - Recommendations */}
-        <div className="mb-8">
+        {/* Variable Rewards - Temporarily disabled for build */}
+        {/* <div className="mb-8">
           <VariableRewards />
-        </div>
+        </div> */}
 
         {/* Quick Actions */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
