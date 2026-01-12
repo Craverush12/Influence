@@ -20,6 +20,9 @@ import {
 import { logout } from '@/app/actions/auth'
 import KarmaBalance from '@/components/karma-balance'
 import { ThemeToggle } from '@/components/theme-toggle'
+import { ProfileCompletionCard } from '@/components/profile-completion-card'
+import { DashboardGamification } from '@/components/dashboard-gamification'
+import { VariableRewards } from '@/components/variable-rewards'
 
 export default async function DashboardPage() {
   const user = await getCurrentUser()
@@ -93,11 +96,16 @@ export default async function DashboardPage() {
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-6 py-12 relative z-10">
         {/* Welcome Section */}
-        <div className="mb-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
-          <h1 className="text-3xl md:text-5xl font-bold mb-3 tracking-tight">
-            Welcome back, <span className="text-primary">{userProfile?.display_name || user.email}</span>
+        <div className="mb-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+          <h1 className="text-4xl md:text-6xl font-display font-extrabold mb-3 tracking-tight">
+            Welcome back, <span className="text-gradient-aurora">{userProfile?.display_name || user.email}</span>
           </h1>
           <p className="text-lg text-muted-foreground">Ready to create something amazing today?</p>
+        </div>
+
+        {/* Profile Completion - Zeigarnik Effect */}
+        <div className="mb-8">
+          <ProfileCompletionCard />
         </div>
 
         {/* Stats Grid */}
@@ -151,8 +159,18 @@ export default async function DashboardPage() {
           })}
         </div>
 
+        {/* Gamification Section */}
+        <div className="mb-8">
+          <DashboardGamification />
+        </div>
+
+        {/* Variable Rewards - Recommendations */}
+        <div className="mb-8">
+          <VariableRewards />
+        </div>
+
         {/* Quick Actions */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           {[
             {
               href: '/explore',
