@@ -1,13 +1,13 @@
 import { createClient } from '@/lib/supabase/server'
 import { getCurrentUser } from '@/lib/auth-service'
-import LandingPage from '@/components/landing-page'
+import LandingPageV2 from '@/components/landing-page-v2'
 import HomeFeed from '@/components/home-feed'
 
 export default async function Home() {
   const user = await getCurrentUser()
 
   if (!user) {
-    return <LandingPage />
+    return <LandingPageV2 />
   }
 
   const supabase = await createClient()

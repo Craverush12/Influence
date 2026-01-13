@@ -321,37 +321,20 @@ export default function ChatInterface({ currentUser }: ChatInterfaceProps) {
     const activeConversation = conversations.find((c) => c.id === selectedConversation)
 
     return (
-        <div className="min-h-screen hero-gradient flex flex-col">
-            {/* Navigation */}
-            <nav className="sticky top-0 z-50 nav-glass">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex justify-between items-center h-16">
-                        <Link href="/" className="flex items-center gap-2">
-                            <div className="w-10 h-10 bg-white/10 border border-white/20 rounded-xl flex items-center justify-center">
-                                <span className="text-white font-bold">CH</span>
-                            </div>
-                            <span className="text-lg font-bold gradient-text">Creator Hub</span>
-                        </Link>
-                        <Link href="/dashboard" className="px-4 py-2 text-white/70 hover:text-white transition-colors">
-                            Dashboard
-                        </Link>
-                    </div>
-                </div>
-            </nav>
-
-            <div className="flex flex-1 overflow-hidden max-w-7xl mx-auto w-full">
+        <div className="min-h-screen bg-background flex flex-col">
+            <div className="flex flex-1 overflow-hidden w-full">
                 {/* Conversations Sidebar */}
-                <div className="w-80 border-r border-white/10 bg-white/5 flex flex-col">
+                <div className="w-80 border-r border-border bg-card flex flex-col">
                     {/* Search */}
-                    <div className="p-4 border-b border-white/10">
+                    <div className="p-4 border-b border-border">
                         <div className="relative">
-                            <SearchIcon className="absolute left-3 top-3 w-4 h-4 text-white/40" />
+                            <SearchIcon className="absolute left-3 top-3 w-4 h-4 text-muted-foreground" />
                             <input
                                 type="text"
                                 placeholder="Search conversations..."
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                className="input-modern w-full pl-10 pr-4 py-2 text-sm"
+                                className="w-full pl-10 pr-4 py-2 text-sm bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50"
                             />
                         </div>
                     </div>
@@ -360,11 +343,11 @@ export default function ChatInterface({ currentUser }: ChatInterfaceProps) {
                     <div className="flex-1 overflow-y-auto">
                         {loading ? (
                             <div className="flex items-center justify-center h-32">
-                                <div className="animate-spin rounded-full h-8 w-8 border-2 border-white/20 border-t-white/60" />
+                                <div className="animate-spin rounded-full h-8 w-8 border-2 border-border border-t-primary" />
                             </div>
                         ) : error ? (
                             <div className="flex items-center justify-center h-32 p-4">
-                                <p className="text-white/60 text-sm text-center">{error}</p>
+                                <p className="text-muted-foreground text-sm text-center">{error}</p>
                             </div>
                         ) : filteredConversations.length > 0 ? (
                             filteredConversations.map((conversation) => (
@@ -374,13 +357,13 @@ export default function ChatInterface({ currentUser }: ChatInterfaceProps) {
                                         setSelectedConversation(conversation.id)
                                         loadMessages(conversation.id)
                                     }}
-                                    className={`w-full text-left p-4 border-b border-white/10 transition-colors ${selectedConversation === conversation.id
-                                        ? 'bg-white/5 border-l-2 border-l-white/30'
-                                        : 'hover:bg-white/5'
+                                    className={`w-full text-left p-4 border-b border-border transition-colors ${selectedConversation === conversation.id
+                                        ? 'bg-accent border-l-2 border-l-primary'
+                                        : 'hover:bg-accent/50'
                                         }`}
                                 >
                                     <div className="flex items-center gap-3">
-                                        <div className="w-12 h-12 rounded-full bg-white/10 border border-white/20 overflow-hidden flex-shrink-0">
+                                        <div className="w-12 h-12 rounded-full bg-accent border border-border overflow-hidden flex-shrink-0">
                                             {conversation.profile_image_url ? (
                                                 <img
                                                     src={conversation.profile_image_url || "/placeholder.svg"}
@@ -388,23 +371,23 @@ export default function ChatInterface({ currentUser }: ChatInterfaceProps) {
                                                     className="w-full h-full object-cover"
                                                 />
                                             ) : (
-                                                <div className="w-full h-full bg-white/10 flex items-center justify-center text-white font-light text-lg">
+                                                <div className="w-full h-full bg-accent flex items-center justify-center text-foreground font-light text-lg">
                                                     {(conversation.display_name || conversation.username)?.[0]?.toUpperCase()}
                                                 </div>
                                             )}
                                         </div>
                                         <div className="flex-1 min-w-0">
                                             <div className="flex items-center justify-between mb-1">
-                                                <p className="font-light text-white truncate">
+                                                <p className="font-light text-foreground truncate">
                                                     {conversation.display_name || conversation.username}
                                                 </p>
                                                 {conversation.unread && conversation.unread > 0 && (
-                                                    <span className="ml-2 flex-shrink-0 w-5 h-5 rounded-full bg-white/20 text-white text-xs flex items-center justify-center">
+                                                    <span className="ml-2 flex-shrink-0 w-5 h-5 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center">
                                                         {conversation.unread}
                                                     </span>
                                                 )}
                                             </div>
-                                            <p className="text-sm text-white/50 truncate">
+                                            <p className="text-sm text-muted-foreground truncate">
                                                 {conversation.lastMessage || 'No messages yet'}
                                             </p>
                                         </div>
@@ -412,10 +395,10 @@ export default function ChatInterface({ currentUser }: ChatInterfaceProps) {
                                 </button>
                             ))
                         ) : (
-                            <div className="flex items-center justify-center h-32 text-white/50 p-4">
+                            <div className="flex items-center justify-center h-32 text-muted-foreground p-4">
                                 <div className="text-center">
                                     <p className="text-sm mb-2">No conversations yet</p>
-                                    <p className="text-xs text-white/40">Start a conversation from a creator's profile</p>
+                                    <p className="text-xs text-muted-foreground/70">Start a conversation from a creator's profile</p>
                                 </div>
                             </div>
                         )}
@@ -426,9 +409,9 @@ export default function ChatInterface({ currentUser }: ChatInterfaceProps) {
                 {selectedConversation && activeConversation ? (
                     <div className="flex-1 flex flex-col">
                         {/* Chat Header */}
-                        <div className="border-b border-white/10 bg-white/5 p-4 flex items-center justify-between">
+                        <div className="border-b border-border bg-card p-4 flex items-center justify-between">
                             <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 rounded-full bg-white/10 border border-white/20 overflow-hidden flex-shrink-0">
+                                <div className="w-10 h-10 rounded-full bg-accent border border-border overflow-hidden flex-shrink-0">
                                     {activeConversation.profile_image_url ? (
                                         <img
                                             src={activeConversation.profile_image_url || "/placeholder.svg"}
@@ -436,23 +419,23 @@ export default function ChatInterface({ currentUser }: ChatInterfaceProps) {
                                             className="w-full h-full object-cover"
                                         />
                                     ) : (
-                                        <div className="w-full h-full bg-white/10 flex items-center justify-center text-white font-light">
+                                        <div className="w-full h-full bg-accent flex items-center justify-center text-foreground font-light">
                                             {(activeConversation.display_name || activeConversation.username)?.[0]?.toUpperCase()}
                                         </div>
                                     )}
                                 </div>
                                 <div>
-                                    <p className="font-light text-white">{activeConversation.display_name || activeConversation.username}</p>
-                                    <p className="text-xs text-white/50">@{activeConversation.username}</p>
+                                    <p className="font-light text-foreground">{activeConversation.display_name || activeConversation.username}</p>
+                                    <p className="text-xs text-muted-foreground">@{activeConversation.username}</p>
                                 </div>
                             </div>
                         </div>
 
                         {/* Messages */}
-                        <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                        <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-background">
                             {messages.length === 0 ? (
                                 <div className="flex items-center justify-center h-full">
-                                    <p className="text-white/50 text-sm">No messages yet. Start the conversation!</p>
+                                    <p className="text-muted-foreground text-sm">No messages yet. Start the conversation!</p>
                                 </div>
                             ) : (
                                 messages.map((msg) => (
@@ -462,12 +445,12 @@ export default function ChatInterface({ currentUser }: ChatInterfaceProps) {
                                     >
                                         <div
                                             className={`max-w-xs lg:max-w-md px-4 py-3 rounded-lg ${msg.sender_id === currentUser.id
-                                                ? 'bg-white/10 text-white'
-                                                : 'bg-white/5 text-white'
+                                                ? 'bg-primary text-primary-foreground'
+                                                : 'bg-card text-foreground'
                                                 }`}
                                         >
                                             <p className="break-words font-light">{msg.content}</p>
-                                            <p className={`text-xs mt-2 font-light ${msg.sender_id === currentUser.id ? 'text-white/60' : 'text-white/50'
+                                            <p className={`text-xs mt-2 font-light ${msg.sender_id === currentUser.id ? 'text-primary-foreground/80' : 'text-muted-foreground'
                                                 }`}>
                                                 {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                             </p>
@@ -486,23 +469,23 @@ export default function ChatInterface({ currentUser }: ChatInterfaceProps) {
                         )}
 
                         {/* Input */}
-                        <div className="border-t border-white/10 bg-white/5 p-4">
+                        <div className="border-t border-border bg-card p-4">
                             <form onSubmit={handleSendMessage} className="flex gap-2">
                                 <input
                                     type="text"
                                     value={inputValue}
                                     onChange={(e) => setInputValue(e.target.value)}
                                     placeholder="Type your message..."
-                                    className="input-modern flex-1 px-4 py-3 rounded-lg"
+                                    className="flex-1 px-4 py-3 rounded-lg bg-background border border-border focus:outline-none focus:ring-2 focus:ring-primary/50"
                                     disabled={sending}
                                 />
                                 <button
                                     type="submit"
                                     disabled={sending || !inputValue.trim()}
-                                    className="p-3 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="p-3 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
                                     {sending ? (
-                                        <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                                        <div className="w-5 h-5 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin"></div>
                                     ) : (
                                         <Send className="w-5 h-5" />
                                     )}
@@ -511,10 +494,10 @@ export default function ChatInterface({ currentUser }: ChatInterfaceProps) {
                         </div>
                     </div>
                 ) : (
-                    <div className="flex-1 flex items-center justify-center text-white/50">
+                    <div className="flex-1 flex items-center justify-center text-muted-foreground bg-background">
                         <div className="text-center">
                             <p className="text-lg mb-4 font-light">Select a conversation to start messaging</p>
-                            <p className="text-sm text-white/40 font-light">or browse creators to start a new chat</p>
+                            <p className="text-sm text-muted-foreground/70 font-light">or browse creators to start a new chat</p>
                         </div>
                     </div>
                 )}

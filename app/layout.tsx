@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Inter, Manrope, JetBrains_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { ThemeProvider } from '@/components/theme-provider'
+import { Toaster } from '@/components/ui/toaster'
 import './globals.css'
 
 // Typography System - Premium Font Stack
@@ -28,8 +29,8 @@ const jetbrainsMono = JetBrains_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'Creator Hub - Connect. Collaborate. Create Magic.',
-  description: 'The platform where influencers and creators unite. Discover collaborators, grow your audience, and build something extraordinary.',
+  title: 'Influx - Where Creators Converge',
+  description: 'The platform where content creators and influencers collaborate, find opportunities, and build their creative empires. Join the influx of successful creators.',
   generator: 'v0.app'
 }
 
@@ -48,7 +49,8 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           {children}
-          <Analytics />
+          <Toaster />
+          {process.env.NODE_ENV === 'production' && <Analytics />}
         </ThemeProvider>
       </body>
     </html>

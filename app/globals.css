@@ -24,24 +24,36 @@
   --color-fog: 240 2% 50%;         /* #7f8084 - Secondary text */
   --color-pearl: 240 5% 96%;       /* #f5f5f7 - Primary text */
   
-  /* === AURORA ACCENT COLORS === */
-  /* Primary Aurora - Emerald Energy */
-  --color-aurora-emerald: 160 84% 45%;      /* #17d99d - Success, growth */
-  --color-aurora-emerald-glow: 160 84% 55%; /* Brighter variant */
-  --color-aurora-emerald-dim: 160 84% 35%;  /* Darker variant */
+  /* === HOMELY CREATOR COLORS === */
+  /* Primary Brand - Warm Amber (Golden Hour Energy) */
+  --color-brand-amber: 38 95% 55%;        /* #FFB341 - Primary brand, warmth, opportunity */
+  --color-brand-amber-glow: 38 95% 65%;   /* Brighter hover state */
+  --color-brand-amber-dim: 38 95% 45%;    /* Darker pressed state */
   
-  /* Aurora Spectrum - Creative Energy */
-  --color-aurora-amber: 38 95% 55%;    /* #ffb341 - Warmth, creativity */
-  --color-aurora-cyan: 190 90% 55%;    /* #1adbff - Technology, innovation */
-  --color-aurora-violet: 262 80% 60%; /* #9d5fff - Imagination */
-  --color-aurora-rose: 340 80% 58%;    /* #f24b8b - Passion */
-  --color-aurora-lime: 85 85% 55%;     /* #b8ff3d - Fresh, new */
+  /* Secondary - Terracotta/Coral (Human Connection) */
+  --color-brand-coral: 340 75% 62%;       /* #E87D8E - Passion, community */
+  --color-brand-coral-glow: 340 75% 72%;  /* Softer variant */
+  
+  /* Accent - Sage Green (Growth & Balance) */
+  --color-brand-sage: 145 45% 55%;        /* #5BAA8C - Growth, calm */
+  --color-brand-sage-glow: 145 45% 65%;   /* Lighter variant */
+  
+  /* Supporting Colors (Keep for variety) */
+  --color-accent-sky: 200 85% 58%;        /* #3DBAED - Info, fresh */
+  --color-accent-lavender: 262 70% 65%;   /* #A884FF - Creativity */
+  
+  /* Legacy Aurora Names (backwards compatibility - map to new brand) */
+  --color-aurora-amber: var(--color-brand-amber);
+  --color-aurora-emerald: var(--color-brand-sage);
+  --color-aurora-rose: var(--color-brand-coral);
+  --color-aurora-cyan: var(--color-accent-sky);
+  --color-aurora-violet: var(--color-accent-lavender);
   
   /* === SEMANTIC COLORS === */
-  --color-success: var(--color-aurora-emerald);
-  --color-warning: var(--color-aurora-amber);
+  --color-success: var(--color-brand-sage);
+  --color-warning: var(--color-brand-amber);
   --color-error: 0 80% 58%;           /* #e63946 - Vibrant red */
-  --color-info: var(--color-aurora-cyan);
+  --color-info: var(--color-accent-sky);
   
   /* === SPACING SYSTEM (Perfect Fourth - 1.333) === */
   --space-0: 0;
@@ -67,26 +79,26 @@
   --radius-2xl: 2rem;     /* 32px */
   --radius-full: 9999px;  /* Pills, avatars */
   
-  /* Light Mode (Fallback) */
-  --background: 0 0% 100%;
-  --foreground: 240 10% 3.9%;
-  --card: 0 0% 100%;
+  /* Light Mode - Warm & Clean */
+  --background: 0 0% 100%;                  /* Pure white */
+  --foreground: 240 10% 3.9%;               /* Almost black text */
+  --card: 0 0% 98%;                         /* Subtle off-white for cards */
   --card-foreground: 240 10% 3.9%;
   --popover: 0 0% 100%;
   --popover-foreground: 240 10% 3.9%;
-  --primary: 240 5.9% 10%;
-  --primary-foreground: 0 0% 98%;
+  --primary: 38 95% 55%;                    /* Warm amber - same as dark */
+  --primary-foreground: 0 0% 100%;          /* White text on amber */
   --secondary: 240 4.8% 95.9%;
   --secondary-foreground: 240 5.9% 10%;
-  --muted: 240 4.8% 95.9%;
-  --muted-foreground: 240 3.8% 46.1%;
-  --accent: 240 4.8% 95.9%;
-  --accent-foreground: 240 5.9% 10%;
+  --muted: 0 0% 96%;                        /* Light gray for muted sections */
+  --muted-foreground: 240 3.8% 46.1%;      /* Medium gray text */
+  --accent: 340 75% 62%;                    /* Coral accent in light mode */
+  --accent-foreground: 0 0% 100%;
   --destructive: 0 84.2% 60.2%;
   --destructive-foreground: 0 0% 98%;
-  --border: 240 5.9% 90%;
-  --input: 240 5.9% 90%;
-  --ring: 240 5.9% 10%;
+  --border: 240 5.9% 90%;                   /* Light borders */
+  --input: 0 0% 96%;                        /* Light input backgrounds */
+  --ring: 38 95% 55%;                       /* Amber focus ring */
   --radius: var(--radius-md);
   
   /* Chart Colors */
@@ -108,7 +120,7 @@
   --popover: var(--color-obsidian);
   --popover-foreground: var(--color-pearl);
   
-  --primary: var(--color-aurora-emerald);  /* Emerald as primary */
+  --primary: var(--color-brand-amber);     /* Warm amber as primary - homely feel */
   --primary-foreground: var(--color-void);
   
   --secondary: var(--color-graphite);      /* Dark elevated */
@@ -117,7 +129,7 @@
   --muted: var(--color-graphite);
   --muted-foreground: var(--color-fog);    /* 50% gray - good contrast */
   
-  --accent: var(--color-graphite);
+  --accent: var(--color-brand-coral);      /* Coral for human warmth */
   --accent-foreground: var(--color-pearl);
   
   --destructive: var(--color-error);
@@ -125,14 +137,14 @@
   
   --border: var(--color-ash);              /* Subtle borders */
   --input: var(--color-ash);
-  --ring: var(--color-aurora-emerald);     /* Emerald focus ring */
+  --ring: var(--color-brand-amber);        /* Amber focus ring - warm */
   
-  /* Chart Colors - Aurora Spectrum */
-  --chart-1: var(--color-aurora-emerald);
-  --chart-2: var(--color-aurora-amber);
-  --chart-3: var(--color-aurora-cyan);
-  --chart-4: var(--color-aurora-violet);
-  --chart-5: var(--color-aurora-rose);
+  /* Chart Colors - Homely Palette */
+  --chart-1: var(--color-brand-amber);
+  --chart-2: var(--color-brand-coral);
+  --chart-3: var(--color-brand-sage);
+  --chart-4: var(--color-accent-sky);
+  --chart-5: var(--color-accent-lavender);
 }
 
 @theme {
@@ -187,13 +199,23 @@
   --color-fog: hsl(var(--color-fog));
   --color-pearl: hsl(var(--color-pearl));
   
-  /* Custom Aurora Colors - Make available as utilities */
+  /* Custom Brand Colors - Make available as utilities */
+  --color-brand-amber: hsl(var(--color-brand-amber));
+  --color-brand-amber-glow: hsl(var(--color-brand-amber-glow));
+  --color-brand-amber-dim: hsl(var(--color-brand-amber-dim));
+  --color-brand-coral: hsl(var(--color-brand-coral));
+  --color-brand-coral-glow: hsl(var(--color-brand-coral-glow));
+  --color-brand-sage: hsl(var(--color-brand-sage));
+  --color-brand-sage-glow: hsl(var(--color-brand-sage-glow));
+  --color-accent-sky: hsl(var(--color-accent-sky));
+  --color-accent-lavender: hsl(var(--color-accent-lavender));
+  
+  /* Legacy Aurora Colors - Keep for backwards compatibility */
   --color-aurora-emerald: hsl(var(--color-aurora-emerald));
   --color-aurora-amber: hsl(var(--color-aurora-amber));
   --color-aurora-cyan: hsl(var(--color-aurora-cyan));
   --color-aurora-violet: hsl(var(--color-aurora-violet));
   --color-aurora-rose: hsl(var(--color-aurora-rose));
-  --color-aurora-lime: hsl(var(--color-aurora-lime));
   
   --radius-lg: var(--radius);
   --radius-md: calc(var(--radius) - 2px);
@@ -765,6 +787,46 @@
   .link-gradient-underline:hover::after {
     transform: scaleX(1);
     transform-origin: left;
+  }
+
+  /* Magnetic Button Effect */
+  .btn-magnetic {
+    @apply relative transition-all duration-300;
+    will-change: transform;
+  }
+
+  .btn-magnetic:hover {
+    @apply scale-105;
+  }
+
+  .btn-magnetic:active {
+    @apply scale-95;
+  }
+
+  /* Smooth hover lift */
+  .hover-lift {
+    @apply transition-all duration-300;
+  }
+
+  .hover-lift:hover {
+    @apply -translate-y-1 shadow-lg;
+  }
+
+  /* Glow effect on hover */
+  .hover-glow {
+    @apply relative transition-all duration-300;
+  }
+
+  .hover-glow::before {
+    content: '';
+    @apply absolute inset-0 opacity-0 transition-opacity duration-300;
+    background: radial-gradient(circle at center, hsl(var(--primary) / 0.15), transparent 70%);
+    border-radius: inherit;
+    z-index: -1;
+  }
+
+  .hover-glow:hover::before {
+    @apply opacity-100;
   }
 }
 

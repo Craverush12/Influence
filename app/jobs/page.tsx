@@ -1,10 +1,20 @@
 import { createClient } from '@/lib/supabase/server'
 import { getCurrentUser } from '@/lib/auth-service'
+import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import { Plus, Briefcase, DollarSign, Clock, MapPin, Search } from 'lucide-react'
+import { Plus, Briefcase, Search, Filter, TrendingUp } from 'lucide-react'
+import { ResponsiveGrid } from '@/components/responsive-grid'
+import PremiumJobCard from '@/components/premium-job-card'
+import { AppLayout } from '@/components/layout/app-layout'
+import { Breadcrumbs } from '@/components/navigation/breadcrumbs'
 
 export default async function JobsPage() {
     const user = await getCurrentUser()
+    
+    if (!user) {
+        redirect('/auth/login')
+    }
+    
     const supabase = await createClient()
 
     const { data: jobs } = await supabase
@@ -17,125 +27,87 @@ export default async function JobsPage() {
         .order('created_at', { ascending: false })
 
     return (
-        <div className="min-h-screen hero-gradient relative overflow-hidden">
-            {/* Navigation */}
-            <nav className="sticky top-0 z-50 nav-glass">
-                <div className="max-w-7xl mx-auto px-6 py-5 flex justify-between items-center">
-                    <Link href="/" className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center">
-                            <Briefcase className="w-5 h-5 text-white" />
+        <AppLayout user={user}>
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12 relative z-10">
+                {/* Breadcrumbs & Header */}
+                <div className="mb-8">
+                    <Breadcrumbs items={[{ label: 'Jobs' }]} className="mb-4" />
+                    
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                        <div>
+                            <h1 className="text-3xl sm:text-4xl font-bold mb-2">Job Opportunities</h1>
+                            <p className="text-muted-foreground">Find high-paying collaborations and grow your career</p>
                         </div>
-                        <span className="text-xl font-bold gradient-text">Creator Jobs</span>
-                    </Link>
-                    <div className="flex items-center gap-4">
-                        <Link href="/dashboard" className="text-white/70 hover:text-white transition-colors">
-                            Dashboard
-                        </Link>
-                        <Link href="/jobs/new" className="btn-primary inline-flex items-center gap-2">
+                        <Link href="/jobs/new" className="btn-primary inline-flex items-center justify-center gap-2">
                             <Plus className="w-4 h-4" />
                             Post a Job
                         </Link>
                     </div>
                 </div>
-            </nav>
+                {/* Search & Filter Bar */}
+                <div className="mb-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
 
-            <div className="max-w-7xl mx-auto px-6 py-12 relative z-10">
-                {/* Header */}
-                <div className="mb-12 fade-in">
-                    <h1 className="text-5xl md:text-6xl font-black mb-4">
-                        <span className="gradient-text">Find</span> <span className="text-white">Opportunities</span>
-                    </h1>
-                    <p className="text-xl text-white/60 mb-8">Collaborate with top creators on exciting projects</p>
-
-                    {/* Search - Placeholder for now */}
-                    <div className="relative max-w-2xl">
-                        <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40" />
-                        <input
-                            type="text"
-                            placeholder="Search jobs by title, category..."
-                            className="input-modern w-full pl-14 pr-5"
-                        />
+                    {/* Search & Filter Bar */}
+                    <div className="bg-card/50 backdrop-blur-sm border border-border rounded-2xl p-2 max-w-3xl mx-auto shadow-sm flex flex-col sm:flex-row gap-2">
+                        <div className="relative flex-1">
+                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                            <input
+                                type="text"
+                                placeholder="Search by title, skills..."
+                                className="w-full bg-transparent border-none focus:ring-0 pl-12 pr-4 py-3 text-foreground placeholder:text-muted-foreground"
+                            />
+                        </div>
+                        <button className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-muted hover:bg-muted/80 transition-colors">
+                            <Filter className="w-4 h-4" />
+                            <span className="text-sm font-medium">Filter</span>
+                        </button>
                     </div>
                 </div>
 
-                {/* Jobs Grid */}
-                <div className="grid grid-cols-1 gap-6">
-                    {jobs?.map((job: any) => (
-                        <Link
-                            key={job.id}
-                            href={`/jobs/${job.id}`}
-                            className="glass-card p-6 hover:bg-white/10 transition-all group"
-                        >
-                            <div className="flex flex-col md:flex-row gap-6">
-                                {/* Creator Info */}
-                                <div className="flex-shrink-0">
-                                    <div className="w-16 h-16 rounded-xl bg-white/10 overflow-hidden">
-                                        {job.creator?.profile_image_url ? (
-                                            <img
-                                                src={job.creator.profile_image_url}
-                                                alt={job.creator.display_name}
-                                                className="w-full h-full object-cover"
-                                            />
-                                        ) : (
-                                            <div className="w-full h-full flex items-center justify-center text-white font-bold text-xl">
-                                                {job.creator?.display_name?.[0] || job.creator?.username?.[0]}
-                                            </div>
-                                        )}
-                                    </div>
-                                </div>
-
-                                {/* Job Details */}
-                                <div className="flex-1">
-                                    <div className="flex flex-col md:flex-row md:items-start md:justify-between mb-2">
-                                        <div>
-                                            <h3 className="text-xl font-bold text-white group-hover:text-blue-400 transition-colors">
-                                                {job.title}
-                                            </h3>
-                                            <p className="text-white/60 text-sm">
-                                                by {job.creator?.display_name || job.creator?.username}
-                                            </p>
-                                        </div>
-                                        <span className="inline-block px-3 py-1 rounded-full bg-white/10 text-xs font-medium text-white/80 mt-2 md:mt-0">
-                                            {job.category || 'General'}
-                                        </span>
-                                    </div>
-
-                                    <p className="text-white/70 mb-4 line-clamp-2">{job.description}</p>
-
-                                    <div className="flex flex-wrap gap-4 text-sm text-white/50">
-                                        {(job.budget_min || job.budget_max) && (
-                                            <div className="flex items-center gap-1.5">
-                                                <DollarSign className="w-4 h-4" />
-                                                <span>
-                                                    ${job.budget_min?.toLocaleString()} - ${job.budget_max?.toLocaleString()}
-                                                </span>
-                                            </div>
-                                        )}
-                                        {job.timeline && (
-                                            <div className="flex items-center gap-1.5">
-                                                <Clock className="w-4 h-4" />
-                                                <span>{job.timeline}</span>
-                                            </div>
-                                        )}
-                                        {job.creator?.location && (
-                                            <div className="flex items-center gap-1.5">
-                                                <MapPin className="w-4 h-4" />
-                                                <span>{job.creator.location}</span>
-                                            </div>
-                                        )}
-                                    </div>
-                                </div>
+                {/* Featured/Hot Jobs Section */}
+                {jobs && jobs.length > 0 && (
+                    <div className="mb-8 sm:mb-12">
+                        <div className="flex items-center justify-between mb-6">
+                            <div className="flex items-center gap-2">
+                                <TrendingUp className="w-5 h-5 text-accent" />
+                                <h2 className="text-xl sm:text-2xl font-bold">Hot Opportunities</h2>
                             </div>
-                        </Link>
-                    ))}
-
-                    {(!jobs || jobs.length === 0) && (
-                        <div className="text-center py-20">
-                            <p className="text-white/50 text-lg">No open jobs found at the moment.</p>
                         </div>
-                    )}
-                </div>
+                        <ResponsiveGrid minWidth={320} gap={6}>
+                            {jobs.slice(0, 3).map((job: any) => (
+                                <PremiumJobCard key={job.id} job={job} showUrgency={true} />
+                            ))}
+                        </ResponsiveGrid>
+                    </div>
+                )}
+
+                {/* All Jobs Grid */}
+                {jobs && jobs.length > 3 && (
+                    <div>
+                        <h2 className="text-xl sm:text-2xl font-bold mb-6">All Opportunities</h2>
+                        <ResponsiveGrid minWidth={320} gap={6}>
+                            {jobs.slice(3).map((job: any) => (
+                                <PremiumJobCard key={job.id} job={job} />
+                            ))}
+                        </ResponsiveGrid>
+                    </div>
+                )}
+
+                {/* Empty State */}
+                {(!jobs || jobs.length === 0) && (
+                    <div className="text-center py-20">
+                        <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
+                            <Briefcase className="w-8 h-8 text-muted-foreground" />
+                        </div>
+                        <h3 className="text-lg font-medium text-foreground mb-2">No opportunities yet</h3>
+                        <p className="text-muted-foreground mb-6">Be the first to post a job opportunity</p>
+                        <Link href="/jobs/new" className="btn-primary inline-flex items-center gap-2">
+                            <Plus className="w-4 h-4" />
+                            Post Your First Job
+                        </Link>
+                    </div>
+                )}
             </div>
-        </div>
+        </AppLayout>
     )
 }

@@ -4,6 +4,8 @@ import Link from 'next/link'
 import { Sparkles, Search, ArrowRight, Star, MapPin, MessageSquare, Briefcase, TrendingUp } from 'lucide-react'
 import KarmaBalance from './karma-balance'
 import { ThemeToggle } from '@/components/theme-toggle'
+import { ProfileCompletionCard } from './profile-completion-card'
+import { VariableRewards } from './variable-rewards'
 
 interface HomeFeedProps {
     user: any
@@ -45,11 +47,21 @@ export default function HomeFeed({ user, creators, jobs }: HomeFeedProps) {
 
             <div className="max-w-7xl mx-auto px-6 py-12">
                 {/* Welcome Header */}
-                <div className="mb-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                    <h1 className="text-3xl md:text-5xl font-bold mb-3 tracking-tight">
-                        Hello, <span className="text-primary">{user.display_name || 'Creator'}</span>
+                <div className="mb-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                    <h1 className="text-4xl md:text-6xl font-display font-extrabold mb-3 tracking-tight">
+                        Hello, <span className="text-gradient-aurora">{user.display_name || 'Creator'}</span>
                     </h1>
                     <p className="text-lg text-muted-foreground">Here's what's happening in the community today.</p>
+                </div>
+
+                {/* Profile Completion - Zeigarnik Effect */}
+                <div className="mb-8">
+                    <ProfileCompletionCard />
+                </div>
+
+                {/* Variable Rewards - Recommendations */}
+                <div className="mb-8">
+                    <VariableRewards />
                 </div>
 
                 {/* Quick Actions */}
